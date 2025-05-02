@@ -1,6 +1,7 @@
 import axios from "axios";
 const api=axios.create({
-    baseURL:'http://127.0.0.1:3500',
+    //baseURL:'http://127.0.0.1:3500',
+    baseURL:'https://modulo4-sprint6-back-1.onrender.com'
 })
 
 export const createUsuario =  (user) =>  api.post('/auth/register', user)
