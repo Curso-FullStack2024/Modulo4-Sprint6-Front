@@ -1,34 +1,49 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import api ,{ createUsuario , validarMailToken, login, olvidoPass, resetPass, borrarUsuario, cambiarPassword} from '../api/authApi'
+import api ,{ borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { useProfile } from './ProfileContext'
+import { obtenerPelicula, obtenerPeliculas } from '../api/movieApi'
 
-export const AuthContext = createContext()
+export const MovieContext = createContext()
 
-const url = 'http://127.0.0.1:3500'
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
-    const [totalCards, setTotalCards] = useState(0)
-    const { setCurrentProfile } = useProfile()
-
-    //para paginado
-    const cardsPerPage = 18
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentCards, setCurrentCards] = useState([]);
-    const [totalPages, setTotalPages] = useState(0);
-
-    //busca la carta por id en el array de cartas del state
-    const getCardById = (id) => {
-        const card = cards.find((card) => card.id === id)
-        return card
-    }
+export const MovieProvider = ({ children }) => {
+    const [movies, setMovies] = useState([])
+   
 
     //POST
-    const createUser = async (user) => {
-            const {data , error} = await createUsuario( user)
+    const createProfile = async (profileData) => {
+            const {data , error} = await crearPerfil( profileData)
              console.log('error=>',data.message)
+    }
+
+
+    const editProfile = async (id, profileData) => {
+        const {data , error} = await editarPerfil(id, profileData)
+         console.log('error=>',data.message)
+         getProfiles(data.user)
+}
+    
+    const getMovies = async (userId) => {
+        
+        const {data , error} = await obtenerPeliculas( )
+        setMovies(data)
+        console.log('error=>',data.error)
+    }
+
+        
+    const getMovieById = async (id) => {
+        
+        const {data , error} = await obtenerPelicula(id )
+        console.log('error=>',data.error)
+        return(data)
+}
+
+    const deleteProfile = async (id) => {
+        
+        const {data , error} = await borrarPerfil( id)
+        setProfiles(profiles.filter(item=>item._id!==id))        
+        console.log('error=>',data.error)
     }
 
     const validarToken = async (token) => {
@@ -43,25 +58,11 @@ export const AuthProvider = ({ children }) => {
          console.log('error en olvido=>',data.message)
     }
 
-///envia la nueva contraseña
+///envia la nueva contrraseña
     const resetPassword = async (id, password) => {          
         const { data, error} = await resetPass(id, password)
          console.log('error en reset=>',data.message)
     }
-
-
-///cambia la  contraseña
-const changePassword = async (currentPassword, newPassword) => {          
-    const { data, error} = await cambiarPassword( user.id, currentPassword, newPassword )
-     console.log('error en reset=>',data.message)
-}
-
-    const deleteUser = async () => {
-        console.log(user.id)
-        const {data , error} = await borrarUsuario( user.id)
-        logoutUser()
-         console.log('error=>',data.message)
-}
 
     const loginUser = async (credentials) => {
         const {data} = await login(credentials)
@@ -77,13 +78,6 @@ const changePassword = async (currentPassword, newPassword) => {
     }
 
 
-    const logoutUser =  () => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')    
-        localStorage.removeItem('currentProfile')        
-        setUser(null)
-        setCurrentProfile(null)
-    }
 
     // PUT 
     const updateCard = async (id, updatedData) => {
@@ -122,28 +116,22 @@ const changePassword = async (currentPassword, newPassword) => {
     //     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
     //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
     // }, [cards, cardsPerPage, currentPage]);
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
-        if (token && savedUser) {
-          try {
-            const parsed = JSON.parse(savedUser);
-            setUser(parsed);
-            // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          } catch (err) {
-            console.error('Error parsing saved user:', err);
-          }
-        }
+        
+        
+          
+        
       }, []);
 
     return (
-        <AuthContext.Provider value={{ user, createUser, validarToken , loginUser, logoutUser, olvidoPassword, resetPassword, deleteUser, changePassword}}>
+        <MovieContext.Provider value={{movies, setMovies, getMovies, getMovieById}}>
             {children}
-        </AuthContext.Provider>
+        </MovieContext.Provider>
     )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useMovies = () => useContext(MovieContext)
 
 
 

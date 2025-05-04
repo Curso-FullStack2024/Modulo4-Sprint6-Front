@@ -10,6 +10,7 @@ export const ProfileProvider = ({ children }) => {
     const [profiles, setProfiles] = useState([])
     const [currentProfile, setCurrentProfile] = useState(null)
     const [profileInEdition, setProfileInEdition] = useState(null)
+    const [watchlist, setWatchlist] = useState({})
     
 
     //POST
@@ -39,10 +40,6 @@ export const ProfileProvider = ({ children }) => {
         console.log('error=>',data.error)
     }
 
-    const validarToken = async (token) => {
-        const { data, error} = await validarMailToken(token)
-         console.log('error=>',data.message)
-    }
 
 /// envia un mail con un token
     const olvidoPassword = async (email) => {
@@ -88,6 +85,62 @@ export const ProfileProvider = ({ children }) => {
 
 
 
+  const toggleWatchlist = async(nuevoItem, profileId) => {
+    // console.log('nuevoItem=>',nuevoItem)
+    // console.log('profileId=>',profileId)
+    await setWatchlist(prev => {
+      const arrayActual = prev[profileId] || [];
+      
+      // Verificar si ya existe un objeto con el mismo id
+      const indice = arrayActual.findIndex(item => item.id === nuevoItem.id);
+      
+      const nuevoArray = indice !== -1
+      ? arrayActual.filter(item => item.id !== nuevoItem.id)  // Eliminar
+     
+      : [...arrayActual, nuevoItem] // Agregar
+      localStorage.setItem("watchlist", JSON.stringify({...prev, [profileId]: nuevoArray }))
+      return { ...prev, [profileId]: nuevoArray };
+    },
+    
+  );
+ 
+  }
+
+        // const indiceExistente = watchlist.lista.findIndex(item => item.id === nuevoItem.id && watchlist.idProfile===profileId );
+    
+        // // Si el item existe (índice >= 0),lo elimina del array
+        // if (indiceExistente >= 0) {
+           
+        //   const newWatchlist = {...watchlist, lista : lista.filter(item => item.id !== nuevoItem.id)}
+        //   console.log(newWatchlist)
+        //   setWatchlist(newWatchlist);
+        //   localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
+        // }
+        // else {
+        //     console.log('agregando a la watchlist')
+        //   // Si no existe, agrega el nuevo item al final del array
+        //   setWatchlist({...watchlist, lista:[ ...lista,nuevoItem]});
+        //   console.log(watchlist)
+        //   localStorage.setItem("watchlist", JSON.stringify([...watchlist, nuevoItem]));
+        // }
+      
+    
+      //devuelve un boolean que indica si el id de la pelicuala ya esta en favoritos
+      const isInWatchlist = (id) => {
+        if(watchlist[currentProfile?._id]){
+          return watchlist[currentProfile._id].some(item => item.id === id);
+        }else{
+          return false
+        }
+      }
+    
+      //carga la watchlist del localstorage
+      useEffect(() => {
+        const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []
+        setWatchlist(savedWatchlist)
+    
+      }, [])
+
     // // Cambio de página
     // const paginate = (pageNumber) => {
     //     // Asegurarse de que el número de página esté dentro del rango válido
@@ -125,7 +178,7 @@ export const ProfileProvider = ({ children }) => {
       }, []);
 
     return (
-        <ProfileContext.Provider value={{profiles, currentProfile, setCurrentProfile, setProfiles, createProfile, getProfiles, deleteProfile, editProfile, profileInEdition, setProfileInEdition}}>
+        <ProfileContext.Provider value={{profiles, currentProfile, setCurrentProfile, setProfiles, createProfile, getProfiles, deleteProfile, editProfile, profileInEdition, setProfileInEdition, watchlist, setWatchlist, isInWatchlist, toggleWatchlist}}>
             {children}
         </ProfileContext.Provider>
     )

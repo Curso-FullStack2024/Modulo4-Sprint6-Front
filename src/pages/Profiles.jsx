@@ -56,7 +56,7 @@ const Profiles = () => {
                         icon: 'error',
                         title: 'Error',
                         text: 'No se pudo eliminar el perfil',
-                        footer: error.message,
+                        footer: error.response.data.message,
                         confirmButtonText: 'Aceptar'
                     })
                     console.error('Error deleting profile:', error)
