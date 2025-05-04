@@ -7,10 +7,11 @@ import { Pagination } from "flowbite-react";
 import MovieCard from '../components/MovieCard';
 
 
-const MoviesList = () => {
+const MyList = () => {
    
-    const { getMovies, movies } = useMovies()
-    const { toggleWatchlist, isInWatchlist, currentProfile } = useProfile()
+   
+    const { toggleWatchlist, isInWatchlist, currentProfile , watchlist } = useProfile()
+    const [milista, setMilista] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
     const onPageChange = (page) => setCurrentPage(page);
@@ -18,9 +19,10 @@ const MoviesList = () => {
 
 
     useEffect(() => {
-        getMovies()
+        setMilista(watchlist[currentProfile._id])
+        
     }
-        , [])
+        , [watchlist[currentProfile._id]])
 
 
 
@@ -29,11 +31,11 @@ const MoviesList = () => {
             <div className="flex flex-content items-center ">
                 <div className="flex flex-col justify-center items-center w-full h-full">
 
-                    <h1 className="text-4xl font-bold  my-3">Películas</h1>
+                    <h1 className="text-4xl font-bold  my-3">Mi Lista </h1>
 
 
                     <div className="flex flex-content flex-wrap  justify-center gap-3 p-3">
-                        {movies && movies.map((movie, index) => (
+                        {milista && milista.map((movie, index) => (
                             <MovieCard key={index} index={index} _id={movie._id}  title={movie.title} poster_path={movie.poster_path} />
 
                         ))}
@@ -50,4 +52,4 @@ const MoviesList = () => {
         </>
     )
 }
-export default MoviesList
+export default MyList

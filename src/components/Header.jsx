@@ -37,12 +37,12 @@ const Header = () => {
         <NavbarBrand href="/">
 
           {/* <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ">NextFliks</span> */}
-          <img alt="" src="/logo_blanco-removebg.png" className="h-10" />
+          <img alt="" src="/logo_blanco-removebg.png" className="h-10 px-20" />
         </NavbarBrand>
         <div className="order-2 hidden items-center md:flex">
           {   ///si esta logueado muestra el boton logout
             user ?
-
+              // solo muestra logout en este lugar si no selecciono un perfil
               !currentProfile && <Button color='dark' onClick={logoutUser} >Logout</Button>
 
               :

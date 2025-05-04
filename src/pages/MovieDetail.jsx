@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useMovies } from '../contexts/MovieContext'
+import { useProfile } from '../contexts/ProfileContext'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import translate  from  'translate'
+import { toast } from 'react-toastify'
 
 const MovieDetail = () => {
   
   const navigate = useNavigate()
   const [currentMovie, setCurrentMovie] = useState(null)
   const [movieId, setMovieId] = useState(null)
-
+  const { isInWatchlist, toggleWatchlist, currentProfile}=useProfile()
   const { getMovieById } = useMovies()
   const { id } = useParams()
   
@@ -30,6 +32,17 @@ const MovieDetail = () => {
     }
   };
 
+
+          const addToWatchlist = () => {
+              toast.info(isInWatchlist(currentMovie._id) ? "se quitó de Mi Lista":"se agregó de Mi Lista...");
+              const data={
+                _id: currentMovie._id,
+                title:currentMovie.title,
+                poster_path:currentMovie.poster_path
+
+              }
+              toggleWatchlist(data, currentProfile._id)                 
+          }
 
   useEffect(() => {
     setMovieId(id)
@@ -79,6 +92,10 @@ const MovieDetail = () => {
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Lanzamiento:</span> {formatoFecha(currentMovie.release_date)} </p>
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Popularidad: </span>{currentMovie.popularity} </p>
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Genero: </span>{currentMovie.genres.join(', ')} </p>
+                <p className='md:text-2xl pt-2 ' ><span className='font-bold '>IMDb: </span>{currentMovie.id} </p>
+                <div className='text-red-600 font-bold z-10 text-xl p-3 cursor-pointer' onClick={() => {  addToWatchlist() }} >
+                {isInWatchlist(currentMovie._id)  ?  'Quitar de ' : 'Agregar a '} Mi Lista <i className={` text-xl bi ${isInWatchlist(currentMovie._id) ? 'bi-heart-fill text-red-700' : 'bi-heart'} z-10`} ></i>
+        </div>
               </div>
 
             </div>

@@ -48,37 +48,72 @@ const SidebarProfile = ({ onClose }) => {
           })
       }
 
+      const handleEditMovie =async ()=>{
+        const { value } = await Swal.fire({
+          title: "Indique el código IMDb",
+          input: "number",
+          inputLabel: "IMDb",         
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return "debe ingresar un numero";
+            }
+          }
+        });
+       if(value){
+        navigate(`/movies/editar/${value}`)
+       }
+      }
+
+
   return (
     <Sidebar aria-label="Default sidebar example " className="w-65  bg-gray-200 dark:bg-gray-800  top-15 right-0 z-50 ">
       <SidebarItems>
         <SidebarItemGroup>
 
-          <SidebarItem href="#" >
-            <Link to="/profiles" className="flex items-center" onClick={onClose}>
+          
+            <Link to="/profiles" className="flex items-center text-black px-3" onClick={onClose}>
               <i className="bi bi-people pr-2" />  Cambiar de perfil
             </Link>
 
-          </SidebarItem>
+         
 
-          <SidebarItem href="#" label="Pro" labelColor="dark">
-            <i className="bi bi-list-stars pr-2" /> Mi lista
-          </SidebarItem>
           
-          <SidebarCollapse label='Cuenta'>
-            <SidebarItem href="#" onClick={handleDelete}>
+          <Link to="/movies/milista" className="flex  text-black px-3" onClick={onClose}>
+            <i className="bi bi-list-stars pr-2" /> Mi lista
+            </Link>
+          
+          
+          <SidebarCollapse label='Cuenta' className='px-0'>
+
+            <SidebarItem onClick={handleDelete} className="px-4">
              <i className="bi bi-person-x pr-2"/>Borrar Cuenta
             </SidebarItem>
-            <SidebarItem  href="#"  >
-            <Link to="/cambiarpassword" className="flex items-center" onClick={onClose}>
+           
+            <Link to="/cambiarpassword" className="flex items-center text-black px-7" onClick={onClose}>
              <i className="bi bi-pass pr-2"/>Cambiar contraseña
              </Link>
-            </SidebarItem>            
+                   
           </SidebarCollapse>
-          <SidebarItem onClick={() => { logoutUser(); onClose() }} className='cursor-pointer' >
+          <SidebarCollapse label='Administración' className="px-0">
+
+            <SidebarItem onClick={handleDelete}  className="px-4">
+             <i className="bi bi-person pr-2"/>Editar usuario
+            </SidebarItem>
+            <SidebarItem  onClick={handleEditMovie} className="px-4" >            
+             <i className="bi bi-film pr-2"/>Editar película            
+            </SidebarItem> 
+           
+            <Link to="/movies/agregar" className="flex items-center text-black px-7" >
+             <i className="bi bi-file-earmark-plus pr-2"/>Agregar película
+             </Link>
+                       
+          </SidebarCollapse>
+          <SidebarItem onClick={() => { logoutUser(); onClose() }} className='cursor-pointer  px-0' >
             <i className="bi bi-box-arrow-left pr-2" /> Logout
           </SidebarItem>
-          <SidebarItem href="#" >
-            <div className='flex justify-center items-center'>
+          <SidebarItem className=" px-0">
+            <div className='flex justify-center items-center px-0'>
               <i className="bi bi-x-square dark:text-red-600 text-md cursor-pointer p-0 m-0" onClick={onClose}></i>
             </div>
           </SidebarItem>

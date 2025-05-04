@@ -2,7 +2,7 @@ import { createContext, useState, useContext, useEffect } from 'react'
 import api ,{ borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { obtenerPelicula, obtenerPeliculas } from '../api/movieApi'
+import { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorIMDb } from '../api/movieApi'
 
 export const MovieContext = createContext()
 
@@ -12,16 +12,16 @@ export const MovieProvider = ({ children }) => {
    
 
     //POST
-    const createProfile = async (profileData) => {
-            const {data , error} = await crearPerfil( profileData)
+    const createMovie = async (movieData) => {        
+            const {data , error} = await crearPelicula( movieData)
              console.log('error=>',data.message)
     }
 
 
-    const editProfile = async (id, profileData) => {
-        const {data , error} = await editarPerfil(id, profileData)
+    const editMovie = async (id, movieData) => {
+        const {data , error} = await editarPelicula(id, movieData)
          console.log('error=>',data.message)
-         getProfiles(data.user)
+         
 }
     
     const getMovies = async (userId) => {
@@ -37,7 +37,25 @@ export const MovieProvider = ({ children }) => {
         const {data , error} = await obtenerPelicula(id )
         console.log('error=>',data.error)
         return(data)
-}
+    }
+
+    const getMovieByIMDb = async (id) => {        
+    const {data , error} = await obtenerPorIMDb(id )
+    console.log('error=>',data.error)
+    return(data)
+    }
+
+    const getGenres = async (userId) => {        
+        const {data , error} = await obtenerGeneros( )
+        console.log('error=>',data.error)
+        return(data)
+    }
+
+    const getLanguages = async (userId) => {        
+        const {data , error} = await obtenerIdiomas( )
+        console.log('error=>',data.error)
+        return(data)
+    }
 
     const deleteProfile = async (id) => {
         
@@ -117,15 +135,9 @@ export const MovieProvider = ({ children }) => {
     //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
     // }, [cards, cardsPerPage, currentPage]);
 
-    useEffect(() => {
-        
-        
-          
-        
-      }, []);
 
     return (
-        <MovieContext.Provider value={{movies, setMovies, getMovies, getMovieById}}>
+        <MovieContext.Provider value={{movies, setMovies, getMovies, getGenres, getLanguages, getMovieById, createMovie, editMovie, getMovieByIMDb}}>
             {children}
         </MovieContext.Provider>
     )

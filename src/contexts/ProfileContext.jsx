@@ -92,10 +92,10 @@ export const ProfileProvider = ({ children }) => {
       const arrayActual = prev[profileId] || [];
       
       // Verificar si ya existe un objeto con el mismo id
-      const indice = arrayActual.findIndex(item => item.id === nuevoItem.id);
+      const indice = arrayActual.findIndex(item => item._id === nuevoItem._id);
       
       const nuevoArray = indice !== -1
-      ? arrayActual.filter(item => item.id !== nuevoItem.id)  // Eliminar
+      ? arrayActual.filter(item => item._id !== nuevoItem._id)  // Eliminar
      
       : [...arrayActual, nuevoItem] // Agregar
       localStorage.setItem("watchlist", JSON.stringify({...prev, [profileId]: nuevoArray }))
@@ -127,13 +127,19 @@ export const ProfileProvider = ({ children }) => {
     
       //devuelve un boolean que indica si el id de la pelicuala ya esta en favoritos
       const isInWatchlist = (id) => {
-        if(watchlist[currentProfile?._id]){
-          return watchlist[currentProfile._id].some(item => item.id === id);
-        }else{
-          return false
+       
+       try {
+         if(watchlist[currentProfile?._id]){
+           return watchlist[currentProfile._id].some(item => item._id === id);
+        
         }
+        else{
+           return false
+         }
+        
+      } catch (error) {
       }
-    
+      }
       //carga la watchlist del localstorage
       useEffect(() => {
         const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []

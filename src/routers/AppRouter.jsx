@@ -10,6 +10,9 @@ import Profiles from '../pages/Profiles'
 import MoviesList from '../pages/MoviesList'
 import MovieDetail from '../pages/MovieDetail'
 import ChangePassword from '../pages/ChangePassword'
+import MyList from '../pages/MyList'
+import AddMovie from '../pages/addMovie'
+import EditMovie from '../pages/editMovie'
 
 
 const AppRouter = () => {
@@ -27,8 +30,10 @@ const AppRouter = () => {
 
                 <Route path="/profiles/" element={< Profiles/>} />
                 <Route path="/movies/" element={< MoviesList/>} />
+                <Route path="/movies/milista" element={< MyList/>} />
                 <Route path="/movies/:id" element={< MovieDetail/>} />
-
+                <Route path="/movies/agregar" element={< AddMovie/>} />
+                <Route path="/movies/editar/:id" element={< EditMovie/>} />
                 <Route path="*" element={<Home />} />
             </Routes>
 
