@@ -6,7 +6,7 @@ import { useProfile } from './ProfileContext'
 
 export const AuthContext = createContext()
 
-const url = 'http://127.0.0.1:3500'
+
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
@@ -86,19 +86,7 @@ const changePassword = async (currentPassword, newPassword) => {
         setCurrentProfile(null)
     }
 
-    // PUT 
-    const updateCard = async (id, updatedData) => {
-        const { data } = await axios.put(`${url}/${id}`, updatedData)
-        setCards((prev) =>
-            prev.map((item) => (item.id == id ? data : item))
-        )
-    }
-
-    //DELETE
-    const deleteCard = async (id) => {
-        await axios.delete(`${url}/${id}`)
-        setCards((prev) => prev.filter((item) => item.id != id))
-    }
+    
 
 
 
