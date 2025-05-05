@@ -1,8 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import api ,{ borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorIMDb } from '../api/movieApi'
+import apiMovies, { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorIMDb } from '../api/movieApi'
 
 export const MovieContext = createContext()
 
@@ -24,8 +23,7 @@ export const MovieProvider = ({ children }) => {
          
 }
     
-    const getMovies = async (userId) => {
-        
+    const getMovies = async (userId) => {               
         const {data , error} = await obtenerPeliculas( )
         setMovies(data)
         console.log('error=>',data.error)
@@ -111,7 +109,18 @@ export const MovieProvider = ({ children }) => {
         setCards((prev) => prev.filter((item) => item.id != id))
     }
 
-
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const savedUser = localStorage.getItem('user');
+        if (token && savedUser) {
+          try {
+            
+            apiMovies.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          } catch (err) {
+            console.error('Error parsing saved user:', err);
+          }
+        }
+      }, []);
 
     // // Cambio de página
     // const paginate = (pageNumber) => {

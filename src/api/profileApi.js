@@ -6,14 +6,8 @@ const api=axios.create({
 
 export const crearPerfil =  (profile) =>  api.post('/profile/create', profile)
 export const obtenerPerfiles =  (id) =>  api.get('/profile/userid/'+ id)
-export const borrarPerfil =  (id) =>  api.get('/profile/delete/'+ id)
+export const borrarPerfil =  (id) =>  api.delete('/profile/delete/'+ id)
 export const editarPerfil =  (id, data) =>  api.post('/profile/update/'+ id, data)
-
-
-// export const validarMailToken =  (token) =>  api.get('/auth/verify/token/'+token)
-// export const login =  (credentials) =>  api.post('/auth/login/',credentials)
-// export const olvidoPass =  (email) =>  api.post('/auth/forgotpassword/', email)
-// export const resetPass =  (id, password) =>  api.post('/auth/resetpassword', {id, password})
 
 
 export default api

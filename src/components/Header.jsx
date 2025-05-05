@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext';
 import { useProfile } from '../contexts/ProfileContext'
-import { Link } from 'react-router-dom';
+
+import { Link , useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion'
 import { animaciones } from '../utils/animations'
 import {
@@ -23,6 +24,7 @@ const Header = () => {
   const [openLogin, setOpenLogin] = useState(true);
   const { user, logoutUser } = useAuth()
   const { currentProfile } = useProfile()
+  const navigate = useNavigate()
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -30,6 +32,10 @@ const Header = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
  
+  const logout=()=>{
+    navigate('/home' )
+    logoutUser()
+  }
 
   return (
     <>
@@ -43,7 +49,7 @@ const Header = () => {
           {   ///si esta logueado muestra el boton logout
             user ?
               // solo muestra logout en este lugar si no selecciono un perfil
-              !currentProfile && <Button color='dark' onClick={logoutUser} >Logout</Button>
+              !currentProfile && <Button color='dark' onClick={logout} >Logout</Button>
 
               :
               <>
@@ -149,10 +155,12 @@ const Header = () => {
               </ul>
             </MegaMenuDropdown>
           </NavbarLink>
-          <Link to="/movies" className="hover:text-primary-600 dark:hover:text-primary-500">
+          <Link to="/movies" className="hover:text-black dark:hover:text-primary-500">
             Peliculas
           </Link>
-          <NavbarLink className='text-gray-200' href="#">Team</NavbarLink>
+          <Link to="/movies/milista" className="hover:text-black dark:hover:text-primary-500">
+            Mi Lista
+          </Link>
           <NavbarLink className='text-gray-200' href="#">Contact</NavbarLink>
         </NavbarCollapse>
       </MegaMenu>

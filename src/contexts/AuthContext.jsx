@@ -70,7 +70,8 @@ const changePassword = async (currentPassword, newPassword) => {
              const decoded= jwtDecode(data.token)
              setUser(decoded)  
              localStorage.setItem('token',data.token)          
-             localStorage.setItem('user', JSON.stringify(decoded))          
+             localStorage.setItem('user', JSON.stringify(decoded))    
+             api.defaults.headers.common["authorization"] = `Bearer ${data.token}`      
          } catch (error) {
             console.log(error)
          }
@@ -129,7 +130,8 @@ const changePassword = async (currentPassword, newPassword) => {
           try {
             const parsed = JSON.parse(savedUser);
             setUser(parsed);
-            // api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+             api.defaults.headers.common['authorization'] = `Bearer ${token}`;
+           
           } catch (err) {
             console.error('Error parsing saved user:', err);
           }
