@@ -103,7 +103,7 @@ const AddMovie = () => {
 
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="id">IMDb</Label>
+                <Label htmlFor="id">TMDB id</Label>
               </div>
               <p className='text-red-500'>{errors.id?.message}</p>
               <TextInput {...register('id', { required: true })} type="text" />

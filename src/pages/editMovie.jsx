@@ -27,7 +27,7 @@ const EditMovie = () => {
   const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm({ resolver: yupResolver(schema) })
   const navigate = useNavigate()
   
-  const { getGenres, getLanguages , editMovie, getMovieByIMDb} = useMovies()
+  const { getGenres, getLanguages , editMovie, getMovieByTMDB} = useMovies()
 
   const{id}=useParams()
   const [generos, setGeneros] = useState([])
@@ -86,7 +86,7 @@ const EditMovie = () => {
   useEffect(()=>{
     const traeMovie = async () => {
       try {
-        const data=await getMovieByIMDb(id)
+        const data=await getMovieByTmdb(id)
         console.log('data=>', data)
         if (data.length==0){
           throw new Error("Película inexistente")
@@ -150,7 +150,7 @@ const EditMovie = () => {
 
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="id">IMDb</Label>
+                <Label htmlFor="id">TMDB id</Label>
               </div>
               <p className='text-red-500'>{errors.id?.message}</p>
               <TextInput {...register('id', { required: true })} type="text" />

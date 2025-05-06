@@ -43,7 +43,7 @@ const Header = () => {
         <NavbarBrand href="/">
 
           {/* <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ">NextFliks</span> */}
-          <img alt="" src="/logo_blanco-removebg.png" className="h-10 px-20" />
+          <img alt="" src="/logo_blanco-removebg.png" className="h-10 px-22" />
         </NavbarBrand>
         <div className="order-2 hidden items-center md:flex">
           {   ///si esta logueado muestra el boton logout
@@ -62,27 +62,8 @@ const Header = () => {
                 </Link>
               </>
           }
-          <div className="flex ">
-           {currentProfile && <Avatar img={`/avatars/${currentProfile?.avatar}`} alt={`avatar de ${currentProfile?.name}`} rounded onClick={toggleSidebar} className='cursor-pointer p-0 m-0 ' />}
-
-            <div className='flex flex-col absolute   w-65 top-15 right-0   '>
-              <AnimatePresence initial={false}>
-                {isSidebarOpen &&
-                  <motion.div
-                    variants={animaciones()}
-                    initial='initial_menu'
-                    animate='animate_menu'
-                    exit='exit_menu'
-                    transition={{ duration: 0.5 }}
-                    className='relative    dark:bg-gray-800 w-40 sm:w-110  z-50   overflow-y-auto scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-600'
-                  >
-                    <SidebarProfile onClose={toggleSidebar} />
-
-                  </motion.div>}
-              </AnimatePresence>
-            </div>
-
-          </div>
+          
+         
         </div>
 
         <NavbarToggle />
@@ -162,9 +143,32 @@ const Header = () => {
             Mi Lista
           </Link>
           <NavbarLink className='text-gray-200' href="#">Contact</NavbarLink>
+
         </NavbarCollapse>
       </MegaMenu>
+      <div className="absolute items-center gap-4 top-12 md:top-2 right-3 w-auto dark:bg-gray-800">
+      
+           {currentProfile && <Avatar img={`/avatars/${currentProfile?.avatar}`} alt={`avatar de ${currentProfile?.name}`} rounded onClick={toggleSidebar} className='cursor-pointer p-0 m-0 ' />}
 
+            <div className='flex flex-col absolute   w-65 top-15 right-0   '>
+              <AnimatePresence initial={false}>
+                {isSidebarOpen &&
+                  <motion.div
+                    variants={animaciones()}
+                    initial='initial_menu'
+                    animate='animate_menu'
+                    exit='exit_menu'
+                    transition={{ duration: 0.5 }}
+                    className='relative    dark:bg-gray-800 w-110   z-50   overflow-y-auto scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-600'
+                  >
+                    <SidebarProfile onClose={toggleSidebar} />
+
+                  </motion.div>}
+              </AnimatePresence>
+            </div>
+
+      
+    </div>
     </>
   );
 }

@@ -5,14 +5,17 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import translate  from  'translate'
 import { toast } from 'react-toastify'
+import MovieRating from '../components/Rating'
 
 const MovieDetail = () => {
   
   const navigate = useNavigate()
   const [currentMovie, setCurrentMovie] = useState(null)
   const [movieId, setMovieId] = useState(null)
+  const [externalIDs, setExternalIds] = useState(null)
+  const [rating, setRating] = useState(null)
   const { isInWatchlist, toggleWatchlist, currentProfile}=useProfile()
-  const { getMovieById } = useMovies()
+  const { getMovieById, getRating, getIMDb } = useMovies()
   const { id } = useParams()
   
   // console.log(movieId)
@@ -50,13 +53,25 @@ const MovieDetail = () => {
   }, [])
 
   useEffect(() => {
+    const traeRating = async() =>{
+     
+      const ext=await getRating(externalIDs?.imdb_id)
+    setRating(await ext.Ratings[2].Source)
+   
+  }
+  traeRating()
+}
+  , [externalIDs])
+  
+  useEffect(() => {
     const traeMovie = async () => {
       try {
         if (movieId){
         const movie= await getMovieById(movieId)
-
-          if (movie){
-            setCurrentMovie(movie)
+        if (movie){
+          setCurrentMovie(movie)
+           setExternalIds(await getIMDb(movie.id))
+         
           }
         }
 
@@ -92,7 +107,8 @@ const MovieDetail = () => {
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Lanzamiento:</span> {formatoFecha(currentMovie.release_date)} </p>
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Popularidad: </span>{currentMovie.popularity} </p>
                 <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Genero: </span>{currentMovie.genres.join(', ')} </p>
-                <p className='md:text-2xl pt-2 ' ><span className='font-bold '>IMDb: </span>{currentMovie.id} </p>
+                <p className='md:text-2xl pt-2 ' ><span className='font-bold '>IMDb: </span>{externalIDs?.imdb_id} </p>
+                <p className='md:text-2xl pt-2 ' ><span className='font-bold '>Rating: </span>{  <MovieRating value={rating || 0} /> } </p>
                 <div className='text-red-600 font-bold z-10 text-xl p-3 cursor-pointer' onClick={() => {  addToWatchlist() }} >
                 {isInWatchlist(currentMovie._id)  ?  'Quitar de ' : 'Agregar a '} Mi Lista <i className={` text-xl bi ${isInWatchlist(currentMovie._id) ? 'bi-heart-fill text-red-700' : 'bi-heart'} z-10`} ></i>
         </div>

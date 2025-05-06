@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { createContext, useState, useContext, useEffect } from 'react'
-import api ,{ borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
+import { borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
 
 export const ProfileContext = createContext()
 
@@ -147,18 +147,18 @@ export const ProfileProvider = ({ children }) => {
     
       }, [])
 
-      useEffect(() => {
-        const token = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
-        if (token && savedUser) {
-          try {
+      // useEffect(() => {
+      //   const token = localStorage.getItem('token');
+      //   const savedUser = localStorage.getItem('user');
+      //   if (token && savedUser) {
+      //     try {
             
-            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          } catch (err) {
-            console.error('Error parsing saved user:', err);
-          }
-        }
-      }, []);
+      //       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      //     } catch (err) {
+      //       console.error('Error parsing saved user:', err);
+      //     }
+      //   }
+      // }, []);
     
 
     // // Cambio de página

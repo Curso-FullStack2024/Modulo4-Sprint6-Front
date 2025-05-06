@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useProfile } from '../contexts/ProfileContext'
  import {toast} from 'react-toastify'
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 const MovieCard = ({ index ,_id, title,  poster_path }) => {
    
+    
      const navigate = useNavigate()
        
         const { toggleWatchlist, isInWatchlist, currentProfile } = useProfile()
@@ -23,10 +24,9 @@ const MovieCard = ({ index ,_id, title,  poster_path }) => {
     
         }
 
-
     return (
         <>
-       < div key={index} className="flex flex-col relative justify-between border-1 border-red-500 rounded-lg bg-gray-300 m-3 basis-64 cursor-pointer" onClick={() => handleClick(_id)}>
+       < div key={index} className="flex flex-col relative justify-between shadow-red-50 rounded-lg bg-gray-300 m-3 basis-64 cursor-pointer" onClick={() => handleClick(_id)}>
         
         <img src={`https://image.tmdb.org/t/p/original/${poster_path}`} alt={`${title}-poster`} className='rounded-sm' />
 

@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.0.1",
     "axios": "^1.9.0",
     "bootstrap-icons": "^1.11.3",
+    "dotenv": "^16.5.0",
     "flowbite-react": "^0.11.7",
     "jwt-decode": "^4.0.0",
     "motion": "^12.9.4",

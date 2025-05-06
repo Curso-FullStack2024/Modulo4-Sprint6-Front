@@ -1,7 +1,9 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import apiMovies, { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorIMDb } from '../api/movieApi'
+import { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorTmdb,  obtenerTopPeliculas } from '../api/movieApi'
+import { traeRating } from '../api/ratingApi'
+import { traeIMDb } from '../api/externalApi'
 
 export const MovieContext = createContext()
 
@@ -29,7 +31,13 @@ export const MovieProvider = ({ children }) => {
         console.log('error=>',data.error)
     }
 
-        
+    const getTopMovies = async (category ) => {               
+        const {data , error} = await obtenerTopPeliculas(category )
+        return (data)
+        console.log('error=>',data.error)
+    }
+
+
     const getMovieById = async (id) => {
         
         const {data , error} = await obtenerPelicula(id )
@@ -37,10 +45,25 @@ export const MovieProvider = ({ children }) => {
         return(data)
     }
 
-    const getMovieByIMDb = async (id) => {        
-    const {data , error} = await obtenerPorIMDb(id )
+    const getMovieByTmdb = async (id) => {        
+    const {data , error} = await obtenerPorTmdb(id )
     console.log('error=>',data.error)
     return(data)
+    }
+
+
+    const getRating = async (imdb) => {    
+        const {data , error} = await traeRating(imdb )
+        
+        console.log('error=>',data.error)
+        return(data)
+    }
+
+
+    const getIMDb = async (id) => {            
+        const {data , error} = await traeIMDb(id)        
+        console.log('error=>',data.error)
+        return(data)
     }
 
     const getGenres = async (userId) => {        
@@ -109,18 +132,18 @@ export const MovieProvider = ({ children }) => {
         setCards((prev) => prev.filter((item) => item.id != id))
     }
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
-        if (token && savedUser) {
-          try {
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     const savedUser = localStorage.getItem('user');
+    //     if (token && savedUser) {
+    //       try {
             
-            apiMovies.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          } catch (err) {
-            console.error('Error parsing saved user:', err);
-          }
-        }
-      }, []);
+    //         apiMovies.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //       } catch (err) {
+    //         console.error('Error parsing saved user:', err);
+    //       }
+    //     }
+    //   }, []);
 
     // // Cambio de página
     // const paginate = (pageNumber) => {
@@ -146,7 +169,7 @@ export const MovieProvider = ({ children }) => {
 
 
     return (
-        <MovieContext.Provider value={{movies, setMovies, getMovies, getGenres, getLanguages, getMovieById, createMovie, editMovie, getMovieByIMDb}}>
+        <MovieContext.Provider value={{movies, setMovies, getMovies, getGenres, getLanguages, getMovieById, createMovie, editMovie, getMovieByTmdb, getTopMovies, getRating, getIMDb}}>
             {children}
         </MovieContext.Provider>
     )
