@@ -6,7 +6,7 @@ import api from "./authApi";
 // })
 
 
-export const obtenerPeliculas =  () =>  api.get('/movies/')
+export const obtenerPeliculas =  (page) =>  api.get(`/movies/?page=${page}`)
 export const obtenerPelicula =  (id) =>  api.get(`/movies/id/${id}`)
 export const obtenerGeneros =  () =>  api.get(`/movies/genres/`)
 export const obtenerIdiomas =  () =>  api.get(`/movies/languages/`)

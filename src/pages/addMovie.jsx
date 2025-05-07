@@ -80,7 +80,7 @@ const AddMovie = () => {
   }, [])
 
   return (
-    <div className="flex flex-content justify-center items-center">
+    <div className="flex flex-content justify-center items-center dark:bg-gray-700 dark:text-gray-100">
       <Card className="flex   w-full max-w-xl rounded-lg shadow dark:bg-gray-800">
         <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-6">

@@ -27,7 +27,7 @@ const EditMovie = () => {
   const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm({ resolver: yupResolver(schema) })
   const navigate = useNavigate()
   
-  const { getGenres, getLanguages , editMovie, getMovieByTMDB} = useMovies()
+  const { getGenres, getLanguages , editMovie, getMovieByTmdb} = useMovies()
 
   const{id}=useParams()
   const [generos, setGeneros] = useState([])
@@ -42,7 +42,8 @@ const EditMovie = () => {
 
     try { //envia el objeto  
       await toast.promise(
-        editMovie(data),
+    
+        editMovie( currentMovie._id, data),
         {
           pending: 'Actualizando pelicula...',
           success: 'Pelicula actualizada con éxito! 🎉',
@@ -91,7 +92,7 @@ const EditMovie = () => {
         if (data.length==0){
           throw new Error("Película inexistente")
         }
-        setCurrentMovie(data)  
+        setCurrentMovie(data[0])  
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -109,19 +110,36 @@ const EditMovie = () => {
   },[id])
 
   useEffect(()=>{
-    if (currentMovie){
-   setValue('title',currentMovie.title)
-   setValue('original_title',currentMovie.original_title)
-   setValue('id',currentMovie.id)
-   setValue('release_date',currentMovie.release_date)
-   setValue('overview',currentMovie.overview)
-   setValue('adult',currentMovie.adult)
-   setValue('origina_language',currentMovie.origina_language)
-   setValue('poster_path',currentMovie.poster_path)
-   setValue('backdrop_path',currentMovie.backdrop_path)
-   setValue('genre_ids',currentMovie.genre_ids)
-    }
+  //   if (currentMovie){
+  //  setValue('title',currentMovie.title)
+  //  setValue('original_title',currentMovie.original_title)
+  //  setValue('id',currentMovie.id)
+  //  setValue('release_date',currentMovie.release_date)
+  //  setValue('overview',currentMovie.overview)
+  //  setValue('adult',currentMovie.adult)
+  //  setValue('original_language',currentMovie.original_language)
+  //  setValue('poster_path',currentMovie.poster_path)
+  //  setValue('backdrop_path',currentMovie.backdrop_path)
+  //  setValue('genre_ids',currentMovie.genre_ids)
+  //   }
 
+  if (currentMovie) {
+    // Convertir los IDs a strings 
+    const genreIdsAsStrings = currentMovie.genre_ids.map(id => id.toString());
+        
+    reset({
+      title: currentMovie.title,
+      original_title: currentMovie.original_title,
+      id: currentMovie.id,
+      release_date: currentMovie.release_date,
+      overview: currentMovie.overview,
+      adult: currentMovie.adult,
+      original_language: currentMovie.original_language.toString(),
+      poster_path: currentMovie.poster_path,
+      backdrop_path: currentMovie.backdrop_path,
+      genre_ids: genreIdsAsStrings
+    });
+  }
   },[currentMovie])
 
   return (

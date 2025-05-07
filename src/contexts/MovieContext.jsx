@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorTmdb,  obtenerTopPeliculas } from '../api/movieApi'
+import { obtenerPelicula, obtenerPeliculas, obtenerGeneros, obtenerIdiomas, crearPelicula, obtenerPorTmdb,  obtenerTopPeliculas, editarPelicula } from '../api/movieApi'
 import { traeRating } from '../api/ratingApi'
 import { traeIMDb } from '../api/externalApi'
 
@@ -10,6 +10,7 @@ export const MovieContext = createContext()
 
 export const MovieProvider = ({ children }) => {
     const [movies, setMovies] = useState([])
+    const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1})
    
 
     //POST
@@ -25,9 +26,10 @@ export const MovieProvider = ({ children }) => {
          
 }
     
-    const getMovies = async (userId) => {               
-        const {data , error} = await obtenerPeliculas( )
-        setMovies(data)
+    const getMovies = async (page) => {               
+        const {data , error} = await obtenerPeliculas(page)
+        setPagination(data.pagination)        
+        setMovies(data.data)
         console.log('error=>',data.error)
     }
 
@@ -169,7 +171,7 @@ export const MovieProvider = ({ children }) => {
 
 
     return (
-        <MovieContext.Provider value={{movies, setMovies, getMovies, getGenres, getLanguages, getMovieById, createMovie, editMovie, getMovieByTmdb, getTopMovies, getRating, getIMDb}}>
+        <MovieContext.Provider value={{movies, setMovies, getMovies, getGenres, getLanguages, getMovieById, createMovie, editMovie, getMovieByTmdb, getTopMovies, getRating, getIMDb, pagination}}>
             {children}
         </MovieContext.Provider>
     )

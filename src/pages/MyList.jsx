@@ -28,7 +28,7 @@ const MyList = () => {
 
     return (
         <>
-            <div className="flex flex-content items-center ">
+            <div className="flex flex-content items-center dark:bg-gray-700 dark:text-gray-100">
                 <div className="flex flex-col justify-center items-center w-full h-full">
 
                     <h1 className="text-4xl font-bold  my-3">Mi Lista </h1>

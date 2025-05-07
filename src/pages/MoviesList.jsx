@@ -1,32 +1,42 @@
 import React, { useEffect, useState } from 'react'
 
-import { useMovies } from '../contexts/MovieContext'
-import { useProfile } from '../contexts/ProfileContext';
+
 import { Pagination } from "flowbite-react";
+import { useMovies } from '../contexts/MovieContext'
+import {  useNavigate, useParams } from 'react-router-dom';
 
 import MovieCard from '../components/MovieCard';
 
 
+
 const MoviesList = () => {
-   
-    const { getMovies, movies } = useMovies()
-    const { toggleWatchlist, isInWatchlist, currentProfile } = useProfile()
-    const [currentPage, setCurrentPage] = useState(1);
+const navigate=useNavigate()   
+    const {page}=useParams()    
+    const { getMovies, movies, pagination } = useMovies()
+    
 
-    const onPageChange = (page) => setCurrentPage(page);
-
+    const onPageChange = (page) => {
+        
+        try{
+            navigate(`/movies/page/${page}`)
+        }
+            catch(error){
+                console.log(error)
+            }
+    }
 
 
     useEffect(() => {
-        getMovies()
+        
+        getMovies(page)
     }
-        , [])
+        , [page])
 
 
 
     return (
         <>
-            <div className="flex flex-content items-center ">
+            <div className="flex flex-content items-center dark:bg-gray-700 dark:text-gray-100  ">
                 <div className="flex flex-col justify-center items-center w-full h-full">
 
                     <h1 className="text-4xl font-bold  my-3">Películas</h1>
@@ -40,11 +50,10 @@ const MoviesList = () => {
                     </div>
                 </div>
 
-
             </div>
             <div className="flex overflow-x-auto sm:justify-center">
-                <Pagination currentPage={currentPage} totalPages={100} onPageChange={onPageChange} />
-
+                <Pagination currentPage={pagination.currentPage} totalPages= {pagination.totalPages } onPageChange={onPageChange} />                
+                {/* {console.log( 'currentPage=', pagination.currentPage , 'totalPages=',pagination.totalPages)} */}
             </div>
 
         </>

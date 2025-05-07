@@ -50,9 +50,9 @@ const SidebarProfile = ({ onClose }) => {
 
       const handleEditMovie =async ()=>{
         const { value } = await Swal.fire({
-          title: "Indique el código IMDb",
+          title: "Indique el código Tmdb",
           input: "number",
-          inputLabel: "IMDb",         
+          inputLabel: "Tmdb",         
           showCancelButton: true,
           inputValidator: (value) => {
             if (!value) {
@@ -67,49 +67,49 @@ const SidebarProfile = ({ onClose }) => {
 
 
   return (
-    <Sidebar aria-label="Default sidebar example " className="w-65  bg-gray-200 dark:bg-gray-800  top-15 right-0 z-50 ">
+    <Sidebar aria-label="Default sidebar example " className="w-65  bg-gray-200 hover:bg-gray-300 dark:bg-gray-800  top-15 right-0 z-50 ">
       <SidebarItems>
         <SidebarItemGroup>
 
           
-            <Link to="/profiles" className="flex items-center text-black px-3" onClick={onClose}>
+            <Link to="/profiles" className="flex items-center rounded-lg p-2 text-black px-7 hover:bg-gray-300 dark:text-gray-100 hover:dark:bg-gray-700 cursosr-pointer" onClick={onClose}>
               <i className="bi bi-people pr-2" />  Cambiar de perfil
             </Link>
 
          
 
           
-          <Link to="/movies/milista" className="flex  text-black px-3" onClick={onClose}>
+          <Link to="/movies/milista" className="flex  text-black rounded-lg p-2 text-black px-7 hover:bg-gray-300 dark:text-gray-100 hover:dark:bg-gray-700 cursosr-pointer" onClick={onClose}>
             <i className="bi bi-list-stars pr-2" /> Mi lista
             </Link>
           
           
-          <SidebarCollapse label='Cuenta' className='px-0'>
+          <SidebarCollapse label='Cuenta' className='px-0 hover:bg-gray-300'>
 
-            <SidebarItem onClick={handleDelete} className="px-4">
+            <SidebarItem onClick={handleDelete} className="px-4 cursor-pointer hover:bg-gray-300">
              <i className="bi bi-person-x pr-2"/>Borrar Cuenta
             </SidebarItem>
            
-            <Link to="/cambiarpassword" className="flex items-center text-black px-7" onClick={onClose}>
+            <Link to="/cambiarpassword" className="flex items-center rounded-lg p-2 text-black px-7 hover:bg-gray-300 dark:text-gray-100 hover:dark:bg-gray-700 cursosr-pointer" onClick={onClose}>
              <i className="bi bi-pass pr-2"/>Cambiar contraseña
              </Link>
                    
           </SidebarCollapse>
-          <SidebarCollapse label='Administración' className="px-0">
+          <SidebarCollapse label='Administración' className="px-0 hover:bg-gray-300">
 
-            <SidebarItem onClick={handleDelete}  className="px-4">
+            <SidebarItem onClick={handleDelete}  className="px-4 cursor-pointer hover:bg-gray-300">
              <i className="bi bi-person pr-2"/>Editar usuario
             </SidebarItem>
-            <SidebarItem  onClick={handleEditMovie} className="px-4" >            
+            <SidebarItem  onClick={handleEditMovie} className="px-4 cursor-pointer hover:bg-gray-300" >            
              <i className="bi bi-film pr-2"/>Editar película            
             </SidebarItem> 
            
-            <Link to="/movies/agregar" className="flex items-center text-black px-7" >
+            <Link to="/movies/agregar" className="flex items-center rounded-lg p-2 text-black px-7 hover:bg-gray-300 dark:text-gray-100 hover:dark:bg-gray-700 cursosr-pointer" >
              <i className="bi bi-file-earmark-plus pr-2"/>Agregar película
              </Link>
                        
           </SidebarCollapse>
-          <SidebarItem onClick={() => { logoutUser(); onClose() }} className='cursor-pointer  px-0' >
+          <SidebarItem onClick={() => { logoutUser(); onClose() }} className='cursor-pointer  px-0 hover:bg-gray-300' >
             <i className="bi bi-box-arrow-left pr-2" /> Logout
           </SidebarItem>
           <SidebarItem className=" px-0">

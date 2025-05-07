@@ -17,6 +17,7 @@ import {
 } from "flowbite-react";
 
 import SidebarProfile from './sidebarProfile'
+import ThemeToggle from './ThemeToggle';
 
 
 
@@ -45,7 +46,7 @@ const Header = () => {
           {/* <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ">NextFliks</span> */}
           <img alt="" src="/logo_blanco-removebg.png" className="h-10 px-22" />
         </NavbarBrand>
-        <div className="order-2 hidden items-center md:flex">
+        <div className="order-2 hidden items-center md:flex  pr-15">
           {   ///si esta logueado muestra el boton logout
             user ?
               // solo muestra logout en este lugar si no selecciono un perfil
@@ -60,9 +61,12 @@ const Header = () => {
                 <Link to="/registro">
                   <Button color='dark' >Sign up</Button>
                 </Link>
+
               </>
           }
-          
+          <div className='flex items-center justify-center px-5   '>
+          <ThemeToggle/>
+          </div>  
          
         </div>
 
@@ -167,7 +171,7 @@ const Header = () => {
               </AnimatePresence>
             </div>
 
-      
+     
     </div>
     </>
   );

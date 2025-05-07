@@ -1,207 +1,212 @@
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { createContext, useState, useContext, useEffect } from 'react'
-import { borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles} from '../api/profileApi'
+import { borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles } from '../api/profileApi'
+import api from '../api/authApi'
 
 export const ProfileContext = createContext()
 
 
 export const ProfileProvider = ({ children }) => {
-    const [profiles, setProfiles] = useState([])
-    const [currentProfile, setCurrentProfile] = useState(null)
-    const [profileInEdition, setProfileInEdition] = useState(null)
-    const [watchlist, setWatchlist] = useState({})
-    
+  const [profiles, setProfiles] = useState([])
+  const [currentProfile, setCurrentProfile] = useState(null)
+  const [profileInEdition, setProfileInEdition] = useState(null)
+  const [watchlist, setWatchlist] = useState({})
 
-    //POST
-    const createProfile = async (profileData) => {
-            const {data , error} = await crearPerfil( profileData)
-             console.log('error=>',data.message)
+
+  //POST
+  const createProfile = async (profileData) => {
+    const { data, error } = await crearPerfil(profileData)
+    console.log('error=>', data.message)
+  }
+
+
+  const editProfile = async (id, profileData) => {
+    const { data, error } = await editarPerfil(id, profileData)
+    console.log('error=>', data.message)
+    getProfiles(data.user)
+  }
+
+  const getProfiles = async (userId) => {
+
+    const { data, error } = await obtenerPerfiles(userId)
+    setProfiles(data)
+    console.log('error=>', data.error)
+  }
+
+  const deleteProfile = async (id) => {
+
+    const { data, error } = await borrarPerfil(id)
+    setProfiles(profiles.filter(item => item._id !== id))
+    console.log('error=>', data.error)
+  }
+
+
+  /// envia un mail con un token
+  const olvidoPassword = async (email) => {
+    console.log(email)
+    const { data, error } = await olvidoPass(email)
+    console.log('error en olvido=>', data.message)
+  }
+
+  ///envia la nueva contrraseña
+  const resetPassword = async (id, password) => {
+    const { data, error } = await resetPass(id, password)
+    console.log('error en reset=>', data.message)
+  }
+
+  const loginUser = async (credentials) => {
+    const { data } = await login(credentials)
+
+    try {
+      const decoded = jwtDecode(data.token)
+      setUser(decoded)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(decoded))
+    } catch (error) {
+      console.log(error)
     }
-
-
-    const editProfile = async (id, profileData) => {
-        const {data , error} = await editarPerfil(id, profileData)
-         console.log('error=>',data.message)
-         getProfiles(data.user)
-}
-    
-    const getProfiles = async (userId) => {
-        
-        const {data , error} = await obtenerPerfiles( userId)
-        setProfiles(data)
-         console.log('error=>',data.error)
-}
-
-    const deleteProfile = async (id) => {
-        
-        const {data , error} = await borrarPerfil( id)
-        setProfiles(profiles.filter(item=>item._id!==id))        
-        console.log('error=>',data.error)
-    }
-
-
-/// envia un mail con un token
-    const olvidoPassword = async (email) => {
-        console.log(email)
-        const { data, error} = await olvidoPass(email)
-         console.log('error en olvido=>',data.message)
-    }
-
-///envia la nueva contrraseña
-    const resetPassword = async (id, password) => {          
-        const { data, error} = await resetPass(id, password)
-         console.log('error en reset=>',data.message)
-    }
-
-    const loginUser = async (credentials) => {
-        const {data} = await login(credentials)
-          
-        try {
-             const decoded= jwtDecode(data.token)
-             setUser(decoded)  
-             localStorage.setItem('token',data.token)          
-             localStorage.setItem('user', JSON.stringify(decoded))          
-         } catch (error) {
-            console.log(error)
-         }
-    }
+  }
 
 
 
-    // PUT 
-    const updateCard = async (id, updatedData) => {
-        const { data } = await axios.put(`${url}/${id}`, updatedData)
-        setCards((prev) =>
-            prev.map((item) => (item.id == id ? data : item))
-        )
-    }
+  // PUT 
+  const updateCard = async (id, updatedData) => {
+    const { data } = await axios.put(`${url}/${id}`, updatedData)
+    setCards((prev) =>
+      prev.map((item) => (item.id == id ? data : item))
+    )
+  }
 
-    //DELETE
-    const deleteCard = async (id) => {
-        await axios.delete(`${url}/${id}`)
-        setCards((prev) => prev.filter((item) => item.id != id))
-    }
+  //DELETE
+  const deleteCard = async (id) => {
+    await axios.delete(`${url}/${id}`)
+    setCards((prev) => prev.filter((item) => item.id != id))
+  }
 
 
 
-  const toggleWatchlist = async(nuevoItem, profileId) => {
+  const toggleWatchlist = async (nuevoItem, profileId) => {
     // console.log('nuevoItem=>',nuevoItem)
     // console.log('profileId=>',profileId)
     await setWatchlist(prev => {
       const arrayActual = prev[profileId] || [];
-      
+
       // Verificar si ya existe un objeto con el mismo id
       const indice = arrayActual.findIndex(item => item._id === nuevoItem._id);
-      
+
       const nuevoArray = indice !== -1
-      ? arrayActual.filter(item => item._id !== nuevoItem._id)  // Eliminar
-     
-      : [...arrayActual, nuevoItem] // Agregar
-      localStorage.setItem("watchlist", JSON.stringify({...prev, [profileId]: nuevoArray }))
+        ? arrayActual.filter(item => item._id !== nuevoItem._id)  // Eliminar
+
+        : [...arrayActual, nuevoItem] // Agregar
+      localStorage.setItem("watchlist", JSON.stringify({ ...prev, [profileId]: nuevoArray }))
       return { ...prev, [profileId]: nuevoArray };
     },
-    
-  );
- 
+
+    );
+
   }
 
-        // const indiceExistente = watchlist.lista.findIndex(item => item.id === nuevoItem.id && watchlist.idProfile===profileId );
-    
-        // // Si el item existe (índice >= 0),lo elimina del array
-        // if (indiceExistente >= 0) {
-           
-        //   const newWatchlist = {...watchlist, lista : lista.filter(item => item.id !== nuevoItem.id)}
-        //   console.log(newWatchlist)
-        //   setWatchlist(newWatchlist);
-        //   localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
-        // }
-        // else {
-        //     console.log('agregando a la watchlist')
-        //   // Si no existe, agrega el nuevo item al final del array
-        //   setWatchlist({...watchlist, lista:[ ...lista,nuevoItem]});
-        //   console.log(watchlist)
-        //   localStorage.setItem("watchlist", JSON.stringify([...watchlist, nuevoItem]));
-        // }
-      
-    
-      //devuelve un boolean que indica si el id de la pelicuala ya esta en favoritos
-      const isInWatchlist = (id) => {
-       
-       try {
-         if(watchlist[currentProfile?._id]){
-           return watchlist[currentProfile._id].some(item => item._id === id);
-        
-        }
-        else{
-           return false
-         }
-        
-      } catch (error) {
+  // const indiceExistente = watchlist.lista.findIndex(item => item.id === nuevoItem.id && watchlist.idProfile===profileId );
+
+  // // Si el item existe (índice >= 0),lo elimina del array
+  // if (indiceExistente >= 0) {
+
+  //   const newWatchlist = {...watchlist, lista : lista.filter(item => item.id !== nuevoItem.id)}
+  //   console.log(newWatchlist)
+  //   setWatchlist(newWatchlist);
+  //   localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
+  // }
+  // else {
+  //     console.log('agregando a la watchlist')
+  //   // Si no existe, agrega el nuevo item al final del array
+  //   setWatchlist({...watchlist, lista:[ ...lista,nuevoItem]});
+  //   console.log(watchlist)
+  //   localStorage.setItem("watchlist", JSON.stringify([...watchlist, nuevoItem]));
+  // }
+
+
+  //devuelve un boolean que indica si el id de la pelicuala ya esta en favoritos
+  const isInWatchlist = (id) => {
+
+    try {
+      if (watchlist[currentProfile?._id]) {
+        return watchlist[currentProfile._id].some(item => item._id === id);
+
       }
+      else {
+        return false
       }
-      //carga la watchlist del localstorage
-      useEffect(() => {
-        const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []
-        setWatchlist(savedWatchlist)
-    
-      }, [])
 
-      // useEffect(() => {
-      //   const token = localStorage.getItem('token');
-      //   const savedUser = localStorage.getItem('user');
-      //   if (token && savedUser) {
-      //     try {
-            
-      //       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      //     } catch (err) {
-      //       console.error('Error parsing saved user:', err);
-      //     }
-      //   }
-      // }, []);
-    
+    } catch (error) {
+    }
+  }
+  //carga la watchlist del localstorage
+  useEffect(() => {
+    const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []
+    setWatchlist(savedWatchlist)
 
-    // // Cambio de página
-    // const paginate = (pageNumber) => {
-    //     // Asegurarse de que el número de página esté dentro del rango válido
-    //     if (pageNumber >= 1 && pageNumber <= totalPages) {
-    //         setCurrentPage(pageNumber);
-    //         // Opcional: Desplazarse hacia arriba al cambiar de página
-    //         window.scrollTo(0, 0);
-    //     }
-    // };
+  }, [])
 
-    // useEffect(() => {
-    //     // Calcular el número total de páginas
-    //     setTotalPages(Math.ceil(cards.length / cardsPerPage));
-    //     // calcular el total de cartas
-    //     setTotalCards(cards.length)
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   const savedUser = localStorage.getItem('user');
+  //   if (token && savedUser) {
+  //     try {
 
-    //     // Actualizar las cartas que se muestran actualmente
-    //     const indexOfLastCard = currentPage * cardsPerPage;
-    //     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-    //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
-    // }, [cards, cardsPerPage, currentPage]);
+  //       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  //     } catch (err) {
+  //       console.error('Error parsing saved user:', err);
+  //     }
+  //   }
+  // }, []);
 
-    useEffect(() => {
-        
-        
-            try {
-              const profile = localStorage.getItem('currentProfile');
-            const parsed = JSON.parse(profile);
-            setCurrentProfile(parsed);
-            
-          } catch (err) {
-            console.error('Se produjo un error:', err);
-          }
-        
-      }, []);
 
-    return (
-        <ProfileContext.Provider value={{profiles, currentProfile, setCurrentProfile, setProfiles, createProfile, getProfiles, deleteProfile, editProfile, profileInEdition, setProfileInEdition, watchlist, setWatchlist, isInWatchlist, toggleWatchlist}}>
-            {children}
-        </ProfileContext.Provider>
-    )
+  // // Cambio de página
+  // const paginate = (pageNumber) => {
+  //     // Asegurarse de que el número de página esté dentro del rango válido
+  //     if (pageNumber >= 1 && pageNumber <= totalPages) {
+  //         setCurrentPage(pageNumber);
+  //         // Opcional: Desplazarse hacia arriba al cambiar de página
+  //         window.scrollTo(0, 0);
+  //     }
+  // };
+
+  // useEffect(() => {
+  //     // Calcular el número total de páginas
+  //     setTotalPages(Math.ceil(cards.length / cardsPerPage));
+  //     // calcular el total de cartas
+  //     setTotalCards(cards.length)
+
+  //     // Actualizar las cartas que se muestran actualmente
+  //     const indexOfLastCard = currentPage * cardsPerPage;
+  //     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
+  // }, [cards, cardsPerPage, currentPage]);
+
+  useEffect(() => {
+
+
+    try {
+      const profile = localStorage.getItem('currentProfile');
+      const parsed = JSON.parse(profile);
+      setCurrentProfile(parsed);
+
+    } catch (err) {
+      console.error('Se produjo un error:', err);
+    }
+
+  }, [])
+
+  useEffect(() => {
+    if (currentProfile )  api.defaults.headers.common['X-Adult'] = (currentProfile.age > 18)
+  }, [currentProfile])
+
+  return (
+    <ProfileContext.Provider value={{ profiles, currentProfile, setCurrentProfile, setProfiles, createProfile, getProfiles, deleteProfile, editProfile, profileInEdition, setProfileInEdition, watchlist, setWatchlist, isInWatchlist, toggleWatchlist }}>
+      {children}
+    </ProfileContext.Provider>
+  )
 }
 
 export const useProfile = () => useContext(ProfileContext)

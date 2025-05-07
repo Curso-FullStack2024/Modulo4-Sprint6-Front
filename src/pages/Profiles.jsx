@@ -94,7 +94,7 @@ const Profiles = () => {
         }
     return (
 
-        <div className=' flex flex-content justify-center  h-full ' >
+        <div className=' flex flex-content justify-center  h-full dark:bg-gray-700 dark:text-gray-100' >
         
                 <div className="flex flex-col justify-center items-center w-full h-full">
                 <h1 className="text-4xl font-bold  my-3">¿Quién está viendo?</h1>

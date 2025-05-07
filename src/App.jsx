@@ -6,6 +6,7 @@ import Header from './components/Header'
 import AppRouter from './routers/AppRouter'
 import { ToastContainer } from 'react-toastify'
 import { MovieProvider } from './contexts/MovieContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 
 function App() {
@@ -16,8 +17,10 @@ function App() {
       <ProfileProvider>
         <AuthProvider>
           <MovieProvider>
+          <ThemeProvider>
             <Header />
             <AppRouter />
+            </ThemeProvider>
           </MovieProvider>
         </AuthProvider>
       </ ProfileProvider>
