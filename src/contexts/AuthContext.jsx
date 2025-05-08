@@ -7,18 +7,10 @@ import { useProfile } from './ProfileContext'
 export const AuthContext = createContext()
 
 
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [totalCards, setTotalCards] = useState(0)
   const { setCurrentProfile } = useProfile()
 
-  //para paginado
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [currentCards, setCurrentCards] = useState([]);
-  // const [totalPages, setTotalPages] = useState(0);
-
-  //busca la carta por id en el array de cartas del state
 
   const getUsers = async () => {
     const { data, error } = await obtenerUsuarios()
@@ -29,15 +21,15 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  //POST
+  //crea una cuenta de usuario
   const createUser = async (user) => {
     const { data } = await createUsuario(user)
-    console.log('error=>', data.message)
   }
 
+  //valida el token de alta de cuenta enviado por amil
   const validarToken = async (token) => {
     const { data } = await validarMailToken(token)
-    console.log('error=>', data.message)
+
   }
 
   /// envia un mail con un token
@@ -60,17 +52,18 @@ export const AuthProvider = ({ children }) => {
     console.log('error en reset=>', data.message)
   }
 
+  // elimina una cuenta de usuario
   const deleteUser = async (id = user.id) => {
-    console.log(user.id)
     const { data } = await borrarUsuario(id)
     logoutUser()
-    console.log('error=>', data.message)
   }
 
+  // login - acceso al sistema
   const loginUser = async (credentials) => {
-    const { data } = await login(credentials)
 
     try {
+      const { data } = await login(credentials)
+      // si las credenciales son validas almacena los datos n local storage y estabelece el token en el header 
       const decoded = jwtDecode(data.token)
       setUser(decoded)
       localStorage.setItem('token', data.token)
@@ -81,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-
+  //cierra la sesion del usuario
   const logoutUser = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -90,49 +83,28 @@ export const AuthProvider = ({ children }) => {
     setCurrentProfile(null)
   }
 
-
+  //obtien el total de roles de usuario
   const getRoles = async () => {
     const { data } = await obtenerRoles()
     console.log('error=>', data.error)
     return (data)
   }
 
-
+  //envia el formualrio de aactualizacion de detos del usuario
   const editUser = async (id, userData) => {
     const { data } = await editarUsuario(id, userData)
-    console.log('error=>', data.message)
-
   }
 
 
-  // // Cambio de página
-  // const paginate = (pageNumber) => {
-  //     // Asegurarse de que el número de página esté dentro del rango válido
-  //     if (pageNumber >= 1 && pageNumber <= totalPages) {
-  //         setCurrentPage(pageNumber);
-  //         // Opcional: Desplazarse hacia arriba al cambiar de página
-  //         window.scrollTo(0, 0);
-  //     }
-  // };
 
-  // useEffect(() => {
-  //     // Calcular el número total de páginas
-  //     setTotalPages(Math.ceil(cards.length / cardsPerPage));
-  //     // calcular el total de cartas
-  //     setTotalCards(cards.length)
-
-  //     // Actualizar las cartas que se muestran actualmente
-  //     const indexOfLastCard = currentPage * cardsPerPage;
-  //     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
-  // }, [cards, cardsPerPage, currentPage]);
-  useEffect(() => {
+  useEffect(() => { // carga los datos de usuario y token desde el localstorage
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     if (token && savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
         setUser(parsed);
+        // establece el header para autorizacion en backend
         api.defaults.headers.common['authorization'] = `Bearer ${token}`;
 
       } catch (err) {
