@@ -33,7 +33,6 @@ const AppRouter = () => {
                 <Route path="/resetpassword/:token" element={< ResetPassword />} />
                 <Route path="/cambiarpassword/" element={< ChangePassword />} />
 
-
                 {/* rutas privadas */}
                 <Route path="/movies/:id" element={
                     <PrivateRoute>
