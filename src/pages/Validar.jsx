@@ -1,71 +1,61 @@
-import { use, useRef, useState , useEffect} from "react";
-import { useForm } from "react-hook-form"
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useAuth } from "../contexts/AuthContext";
-import { Link , useNavigate, useParams} from "react-router-dom";
-import { Button,  Label, Card, TextInput } from "flowbite-react";
+import { Card } from "flowbite-react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { useAuth } from "../contexts/AuthContext";
 
 
+const Validar = () => {
+  const { token } = useParams()
 
+  const navigate = useNavigate()
+  const { validarToken } = useAuth()
 
-const Validar=()=> {
-   const {token} = useParams()
+  const validarUsuario = async (token) => {
 
-   const navigate = useNavigate()
-   const { validarToken } = useAuth()
-
-   const validarUsuario = async (token) => {
-    
-     try { //envia el objeto card 
-       await toast.promise(
+    try { //envia el objeto card 
+      await toast.promise(
         validarToken(token),
-         {
-           pending: 'Verificando cuenta...',
-           success: 'Cuenta verificada con éxito! 🎉',
-           error: 'Error al verificar la cuenta.',
-         }
-       );
-       Swal.fire({
-         icon: 'success',
-         title: 'Éxito',
-         text: 'Cuenta verificada con éxito!',
-         confirmButtonText: 'Aceptar'
-       })
- 
-        navigate(`/login`)
- 
-     } catch (error) {
-       console.log('error en Validar=>', error.response.data.message)
-       Swal.fire({
-         icon: 'error',
-         title: 'Error',
-         text: error.response.data.message,
-         footer: error.message,
-         confirmButtonText: 'Aceptar'
-       })
-       navigate('/')
-     }
+        {
+          pending: 'Verificando cuenta...',
+          success: 'Cuenta verificada con éxito! 🎉',
+          error: 'Error al verificar la cuenta.',
+        }
+      );
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Cuenta verificada con éxito!',
+        confirmButtonText: 'Aceptar'
+      })
+
+      navigate(`/login`)
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response.data.message,
+        footer: error.message,
+        confirmButtonText: 'Aceptar'
+      })
+      navigate('/')
     }
+  }
 
-useEffect(() => {
-    const validar = async () => {
-     
-        await validarToken(token)
-        navigate('/login')    
-       
-      }
+  useEffect(() => {
     //verifica si el token es valido
-    validarUsuario(token) 
-   }, [])
- 
-   return (
+    validarUsuario(token)
+  }, [])
 
-    <Card className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg shadow dark:bg-gray-800">
-     
-        </ Card>
+  return (
+
+    <div className="flex flex-content items-center justify-center min-h-[calc(100vh-5rem-7.5rem)]">
+      <Card className="  w-full max-w-md  rounded-lg shadow dark:bg-gray-800">
+
+      </ Card>
+    </div>
   );
 }
 export default Validar

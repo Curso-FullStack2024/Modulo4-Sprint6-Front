@@ -1,13 +1,11 @@
-import {  useRef, useState, useEffect } from "react";
-import { useForm } from "react-hook-form"
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useAuth } from "../contexts/AuthContext";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Label, Card, TextInput } from "flowbite-react";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Card, Label, TextInput } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2'
-import { jwtDecode } from "jwt-decode";
+import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import { useAuth } from "../contexts/AuthContext";
 
 
 //validaciones
@@ -21,8 +19,6 @@ const schema = yup.object().shape({
 const ChangePassword = () => {
   const { register, formState: { errors }, handleSubmit, } = useForm({ resolver: yupResolver(schema) })
    
-
-
   const navigate = useNavigate()
   const { changePassword } = useAuth()
 
@@ -45,9 +41,7 @@ const ChangePassword = () => {
       })
       navigate(`/home`)
 
-    } catch (error) {
-      // console.log('error en login=>',error.response.data.message)
-      console.log('error en cambiar contraseña=>', error)
+    } catch (error) {      
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -62,7 +56,8 @@ const ChangePassword = () => {
 
   return (
 
-    <Card className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg shadow dark:bg-gray-800">
+    <div className="flex flex-content items-center justify-center min-h-[calc(100vh-5rem-7.5rem)]">
+    <Card className="  w-full max-w-md  rounded-lg shadow dark:bg-gray-800">
       <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">Cambio de contraseña </h3>
@@ -101,7 +96,7 @@ const ChangePassword = () => {
         </div>
       </form>
     </ Card>
-
+</div>
   );
 }
 export default ChangePassword

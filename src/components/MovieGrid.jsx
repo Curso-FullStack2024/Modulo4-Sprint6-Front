@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import MovieTopCard from './MovieTopCard';
 
-const MovieGrid = ({ movies, title = "ÚLTIMOS ESTRENOS" }) => {
+
+const MovieGrid = ({ movies, title  }) => {
     return (
       <div className="container mx-auto px-4 py-8">
         {/* Título destacado */}

@@ -1,9 +1,4 @@
-import axios from "axios";
 import api from "./authApi";
-// const apiMovies=axios.create({
-//   baseURL:'http://127.0.0.1:3500',
-//       // baseURL:'https://modulo4-sprint6-back-1.onrender.com'
-// })
 
 
 export const obtenerPeliculas =  (page) =>  api.get(`/movies/?page=${page}`)
@@ -15,4 +10,3 @@ export const editarPelicula =  (id, data) =>  api.put(`/movies/actualizar/${id}`
 export const obtenerPorTmdb =  (id) =>  api.get(`/movies/tmdb/${id}`)
 export const obtenerTopPeliculas =  (category) =>  api.get(`/movies/top/${category}`)
 
-// export default api

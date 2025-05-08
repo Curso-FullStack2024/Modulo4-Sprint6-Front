@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useProfile } from '../contexts/ProfileContext'
+import { useProfile } from '../contexts/ProfileContext';
 
-import { Link , useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion'
-import { animaciones } from '../utils/animations'
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { animaciones } from '../utils/animations';
 import {
   Button,
   MegaMenu,
@@ -16,7 +16,7 @@ import {
   Avatar
 } from "flowbite-react";
 
-import SidebarProfile from './sidebarProfile'
+import SidebarProfile from './sidebarProfile';
 import ThemeToggle from './ThemeToggle';
 
 
@@ -32,21 +32,21 @@ const Header = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
- 
-  const logout=()=>{
-    navigate('/home' )
+
+  const logout = () => {
+    navigate('/home')
     logoutUser()
   }
 
   return (
     <>
-      <MegaMenu className="bg-[#E50914] text-gray-200">
+      <MegaMenu className="bg-[#E50914] text-gray-100">
         <NavbarBrand href="/">
 
           {/* <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ">NextFliks</span> */}
           <img alt="" src="/logo_blanco-removebg.png" className="h-10 px-22" />
         </NavbarBrand>
-        <div className="order-2 hidden items-center md:flex  pr-15">
+        <div className="order-2 hidden items-center md:flex  pr-27">
           {   ///si esta logueado muestra el boton logout
             user ?
               // solo muestra logout en este lugar si no selecciono un perfil
@@ -64,115 +64,69 @@ const Header = () => {
 
               </>
           }
-          <div className='flex items-center justify-center px-5   '>
-          <ThemeToggle/>
-          </div>  
-         
+
+
         </div>
 
         <NavbarToggle />
-        <NavbarCollapse>
-          <Link to="/" className='hover:text-black'>Home</Link>
-          <NavbarLink className='text-gray-200'>
-            <MegaMenuDropdown toggle={<>Company</>}>
-              <ul className="grid grid-cols-3">
-                <div className="space-y-4 p-4">
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      About Us
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Library
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Resources
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Pro Version
-                    </a>
-                  </li>
-                </div>
-                <div className="space-y-4 p-4">
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Contact Us
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Support Center
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Terms
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Blog
-                    </a>
-                  </li>
-                </div>
-                <div className="space-y-4 p-4">
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Newsletter
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Playground
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      License
-                    </a>
-                  </li>
-                </div>
-              </ul>
-            </MegaMenuDropdown>
-          </NavbarLink>
-          <Link to="/movies" className="hover:text-black dark:hover:text-primary-500">
+        <NavbarCollapse className='z-5 text-white '>
+          <Link to="/" className='text-gray-200 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300 '>Home</Link>
+          <Link to="/movies" className="text-gray-200 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300">
             Peliculas
           </Link>
-          <Link to="/movies/milista" className="hover:text-black dark:hover:text-primary-500">
+          <Link to="/movies/milista" className="text-gray-200 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300">
             Mi Lista
           </Link>
-          <NavbarLink className='text-gray-200' href="#">Contact</NavbarLink>
+          <Link to='/profiles ' className='text-gray-200 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300' href="#">Perfiles</Link>
 
+          {user?.role.name === 'admin' &&
+            <NavbarLink >
+              <MegaMenuDropdown toggle={<div className='text-gray-200 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300'>Administrar</div>} >
+                <ul className="grid grid-cols-3 text-white ">
+                  <div className="space-y-4 p-4 text-white ">
+                    <li>
+                      <Link to="/users" className='text-gray-900 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300 '>Administrar cuentas</Link>
+                    </li>
+                    <li>
+                      <Link to="/movies/agregar" className='text-gray-900 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300'>Cargar películas</Link>
+                    </li>
+                    <li>
+                      <Link to="/movies/editar" className='text-gray-900 hover:text-gray-700 dark:text-gray-100 hover:dark:text-gray-300'>Editar películas </Link>
+                    </li>
+
+                  </div>
+
+                </ul>
+              </MegaMenuDropdown>
+            </NavbarLink>
+          }
+          <div className='flex items-center justify-center px-5  absolute items-center gap-4 top-12 md:top-2 right-15 w-auto '>
+            <ThemeToggle />
+          </div>
         </NavbarCollapse>
       </MegaMenu>
       <div className="absolute items-center gap-4 top-12 md:top-2 right-3 w-auto dark:bg-gray-800">
-      
-           {currentProfile && <Avatar img={`/avatars/${currentProfile?.avatar}`} alt={`avatar de ${currentProfile?.name}`} rounded onClick={toggleSidebar} className='cursor-pointer p-0 m-0 ' />}
 
-            <div className='flex flex-col absolute   w-65 top-15 right-0   '>
-              <AnimatePresence initial={false}>
-                {isSidebarOpen &&
-                  <motion.div
-                    variants={animaciones()}
-                    initial='initial_menu'
-                    animate='animate_menu'
-                    exit='exit_menu'
-                    transition={{ duration: 0.5 }}
-                    className='relative    dark:bg-gray-800 w-110   z-50   overflow-y-auto scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-600'
-                  >
-                    <SidebarProfile onClose={toggleSidebar} />
+        {currentProfile && <Avatar img={`/avatars/${currentProfile?.avatar}`} alt={`avatar de ${currentProfile?.name}`} rounded onClick={toggleSidebar} className='cursor-pointer p-0 m-0 ' />}
 
-                  </motion.div>}
-              </AnimatePresence>
-            </div>
+        <div className='flex flex-col absolute   w-65 top-15 right-0   '>
+          <AnimatePresence initial={false}>
+            {isSidebarOpen &&
+              <motion.div
+                variants={animaciones()}
+                initial='initial_menu'
+                animate='animate_menu'
+                exit='exit_menu'
+                transition={{ duration: 0.5 }}
+                className='relative    dark:bg-gray-800 w-110   z-50   overflow-y-auto scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-600'
+              >
+                <SidebarProfile onClose={toggleSidebar} />
 
-     
-    </div>
+              </motion.div>}
+          </AnimatePresence>
+        </div>
+
+      </div>
     </>
   );
 }

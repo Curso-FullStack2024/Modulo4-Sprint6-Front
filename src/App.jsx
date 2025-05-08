@@ -7,6 +7,7 @@ import AppRouter from './routers/AppRouter'
 import { ToastContainer } from 'react-toastify'
 import { MovieProvider } from './contexts/MovieContext'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { FooterN } from './components/Footer'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <ThemeProvider>
             <Header />
             <AppRouter />
+            <FooterN />
             </ThemeProvider>
           </MovieProvider>
         </AuthProvider>

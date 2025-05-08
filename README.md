@@ -1,12 +1,52 @@
-# React + Vite
+# DIPLOMATURA FULL STACK  
+## Módulo 4  
+### Sprint 6 – Trabajo Final – Front End  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Alumno:** Alejandro Luna  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Proyecto: Nodo Cine  
 
-## Expanding the ESLint configuration
+### Tecnologías utilizadas:
+- Vite  
+- React  
+- TailwindCSS  
+- Flowbite  
+- React Toastify  
+- SweetAlert  
+- React Hook Form  
+- Yup  
+- JSON Web Token  
+- Axios  
+- Nodemailer  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+### Descripción del proyecto:
+
+La plataforma desarrollada permite visualizar un listado de películas y armar una lista de favoritas.  
+
+Cuenta con un sistema de registro de usuarios, en el cual se debe ingresar una dirección de correo electrónico válida. Al registrarse, el usuario recibirá un mail de validación de cuenta. Para esta funcionalidad se utiliza **Nodemailer** y **JSON Web Token (JWT)**.  
+
+Los usuarios no registrados solo pueden acceder a la página de inicio, donde se muestra un top 5 de películas destacadas por ranking, novedades y popularidad.  
+
+Una vez logueado, el usuario debe seleccionar un perfil o crear uno si es su primer ingreso para poder utilizar la plataforma.  
+
+### Niveles de usuario:
+- **Usuario general**  
+- **Usuario editor**: puede cargar y editar películas  
+- **Usuario administrador**: además de las funciones anteriores, puede gestionar cuentas de usuarios  
+
+### Perfiles:
+Los perfiles pueden clasificarse según la edad: mayores o menores de 18 años. Dependiendo de esta información, se mostrarán o no las películas catalogadas como contenido para adultos.  
+
+No existe un límite en la cantidad de perfiles por cuenta. Cada perfil puede gestionar su propia lista de películas favoritas.  
+
+### Funcionalidades adicionales:
+- Modo oscuro  
+- Paginado en el listado de películas  
+
+
+Deploy en 
+https://nextfliks.netlify.app/

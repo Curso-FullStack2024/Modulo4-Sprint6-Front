@@ -14,6 +14,7 @@ import ChangePassword from '../pages/ChangePassword'
 import MyList from '../pages/MyList'
 import AddMovie from '../pages/addMovie'
 import EditMovie from '../pages/editMovie'
+import AdminUsers from '../pages/AdminUsers'
 import EditorRoute from './EditorRoute'
 import AdminRoute from './AdminRoute'
 
@@ -70,6 +71,13 @@ const AppRouter = () => {
                     <PrivateRoute>
                         <AdminRoute>
                             < AddMovie />
+                        </AdminRoute>
+                    </PrivateRoute>} />
+
+                    <Route path="/users" element={
+                    <PrivateRoute>
+                        <AdminRoute>
+                            < AdminUsers />
                         </AdminRoute>
                     </PrivateRoute>} />
 

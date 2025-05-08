@@ -10,9 +10,7 @@ const [topDateRelease, setTopDateRelease] = useState([])
 const [topVoteAverage, setTopVoteAverage] = useState([])
 
   const {getTopMovies} =useMovies()
-  const { user} = useAuth()
-  const {currentProfile} = useProfile()
-  
+   
   useEffect(() => {
      
      const getMovies =async() => {
@@ -28,7 +26,7 @@ const [topVoteAverage, setTopVoteAverage] = useState([])
   return (
 <>
   <MovieGrid movies={topDateRelease} title="Últimos Estrenos" />
-      
+
   <MovieGrid movies={topPopularity} title="Más Populares"/>
 
   <MovieGrid movies={topVoteAverage} title="Mayor Promedio de Votos" />

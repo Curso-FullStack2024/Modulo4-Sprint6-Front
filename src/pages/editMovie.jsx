@@ -1,40 +1,38 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Card, Checkbox, Datepicker, Label, Select, Textarea, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form"
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useAuth } from "../contexts/AuthContext";
-import { useMovies } from "../contexts/MovieContext";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Label, Card, TextInput, Datepicker, Textarea, Select, Checkbox } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import { useMovies } from "../contexts/MovieContext";
 
 
 //validaciones
 const schema = yup.object().shape({
-   title: yup.string().required('el título es obligatorio'),
-   original_title: yup.string().required('el título original es obligatorio'),
-   id: yup.number('debe ingresar un numero').typeError('Debes ingresar un número válido').required('el codigo IMDd es obligatorio'),
-   release_date: yup.string().required('la fecha de estreno es obligatoria'),
-   overview: yup.string().required('el resumen es obligatorio'),
+  title: yup.string().required('el título es obligatorio'),
+  original_title: yup.string().required('el título original es obligatorio'),
+  id: yup.number('debe ingresar un numero').typeError('Debes ingresar un número válido').required('el codigo IMDd es obligatorio'),
+  release_date: yup.string().required('la fecha de estreno es obligatoria'),
+  overview: yup.string().required('el resumen es obligatorio'),
   original_language: yup.string().required('el idioma es obligatorio'),
   poster_path: yup.string().required('la imagen de portada es obligatoria'),
   backdrop_path: yup.string().required('la imagen de reverso es obligatoria'),
   genre_ids: yup.array().min(1, "Debes seleccionar al menos un genero").required("el género es obligatorio"),
 })
- 
+
 const EditMovie = () => {
   const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm({ resolver: yupResolver(schema) })
   const navigate = useNavigate()
-  
-  const { getGenres, getLanguages , editMovie, getMovieByTmdb} = useMovies()
 
-  const{id}=useParams()
+  const { getGenres, getLanguages, editMovie, getMovieByTmdb } = useMovies()
+
+  const { id } = useParams()
   const [generos, setGeneros] = useState([])
   const [languages, setLanguages] = useState([])
   const [currentMovie, setCurrentMovie] = useState(null)
 
-  const [selectedDate, setSelectedDate] = useState(null);
   register('release_date', { required: true });
 
 
@@ -42,8 +40,8 @@ const EditMovie = () => {
 
     try { //envia el objeto  
       await toast.promise(
-    
-        editMovie( currentMovie._id, data),
+
+        editMovie(currentMovie._id, data),
         {
           pending: 'Actualizando pelicula...',
           success: 'Pelicula actualizada con éxito! 🎉',
@@ -53,16 +51,11 @@ const EditMovie = () => {
       Swal.fire({
         icon: 'success',
         title: 'Éxito',
-        text: 'Pelicula actualizada con éxito!',              
+        text: 'Pelicula actualizada con éxito!',
         confirmButtonText: 'Aceptar'
       })
-       
-      //  navigate(-1)
-      //  navigate(`/validar/${data.token}`)
-      //  navigate(`/`)
 
     } catch (error) {
-      console.log('error en editPelicula=>', error)
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -70,7 +63,7 @@ const EditMovie = () => {
         footer: error.message,
         confirmButtonText: 'Aceptar'
       })
-     
+
     }
 
   }
@@ -84,15 +77,14 @@ const EditMovie = () => {
     traeDatos()
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     const traeMovie = async () => {
       try {
-        const data=await getMovieByTmdb(id)
-        console.log('data=>', data)
-        if (data.length==0){
+        const data = await getMovieByTmdb(id)
+        if (data.length == 0) {
           throw new Error("Película inexistente")
         }
-        setCurrentMovie(data[0])  
+        setCurrentMovie(data[0])
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -103,48 +95,36 @@ const EditMovie = () => {
         })
         navigate('/home')
       }
-      
-    }    
+
+    }
     traeMovie()
 
-  },[id])
+  }, [id])
 
-  useEffect(()=>{
-  //   if (currentMovie){
-  //  setValue('title',currentMovie.title)
-  //  setValue('original_title',currentMovie.original_title)
-  //  setValue('id',currentMovie.id)
-  //  setValue('release_date',currentMovie.release_date)
-  //  setValue('overview',currentMovie.overview)
-  //  setValue('adult',currentMovie.adult)
-  //  setValue('original_language',currentMovie.original_language)
-  //  setValue('poster_path',currentMovie.poster_path)
-  //  setValue('backdrop_path',currentMovie.backdrop_path)
-  //  setValue('genre_ids',currentMovie.genre_ids)
-  //   }
+  useEffect(() => {
+   
 
-  if (currentMovie) {
-    // Convertir los IDs a strings 
-    const genreIdsAsStrings = currentMovie.genre_ids.map(id => id.toString());
-        
-    reset({
-      title: currentMovie.title,
-      original_title: currentMovie.original_title,
-      id: currentMovie.id,
-      release_date: currentMovie.release_date,
-      overview: currentMovie.overview,
-      adult: currentMovie.adult,
-      original_language: currentMovie.original_language.toString(),
-      poster_path: currentMovie.poster_path,
-      backdrop_path: currentMovie.backdrop_path,
-      genre_ids: genreIdsAsStrings
-    });
-  }
-  },[currentMovie])
+    if (currentMovie) {
+      const genreIdsAsStrings = currentMovie.genre_ids.map(id => id.toString());
+
+      reset({
+        title: currentMovie.title,
+        original_title: currentMovie.original_title,
+        id: currentMovie.id,
+        release_date: currentMovie.release_date,
+        overview: currentMovie.overview,
+        adult: currentMovie.adult,
+        original_language: currentMovie.original_language.toString(),
+        poster_path: currentMovie.poster_path,
+        backdrop_path: currentMovie.backdrop_path,
+        genre_ids: genreIdsAsStrings
+      });
+    }
+  }, [currentMovie])
 
   return (
-    
-     
+
+
     <div className="flex flex-content justify-center items-center">
       <Card className="flex   w-full max-w-xl rounded-lg shadow dark:bg-gray-800">
         <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -182,8 +162,7 @@ const EditMovie = () => {
               <p className='text-red-500'>{errors.release_date?.message}</p>
               <Datepicker
                 onChange={(date) => {
-                  console.log(date.toLocaleDateString())
-                  setSelectedDate(date);
+                  
                   setValue('release_date', date);
                 }}
                 language="es-ES"
@@ -254,7 +233,7 @@ const EditMovie = () => {
               </Select>
             </div>
 
-                
+
 
             <div className="w-full">
               <Button type="submit">Guardar</Button>
@@ -265,7 +244,7 @@ const EditMovie = () => {
         </form>
       </ Card>
     </div>
-              
+
   );
 }
 export default EditMovie

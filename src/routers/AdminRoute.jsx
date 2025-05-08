@@ -3,8 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { Navigate } from 'react-router-dom'
 
 const AdminRoute = ({ children }) => {
-  const { user } = useAuth()
-  console.log(user)
+  const { user } = useAuth()  
   return user.role.name==='admin' ? children : <Navigate to="/login" replace />
 }
 

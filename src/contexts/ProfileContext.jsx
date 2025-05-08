@@ -1,8 +1,6 @@
-import axios from 'axios'
-import { jwtDecode } from 'jwt-decode'
-import { createContext, useState, useContext, useEffect } from 'react'
-import { borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles } from '../api/profileApi'
+import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/authApi'
+import { borrarPerfil, crearPerfil, editarPerfil, obtenerPerfiles } from '../api/profileApi'
 
 export const ProfileContext = createContext()
 
@@ -14,82 +12,36 @@ export const ProfileProvider = ({ children }) => {
   const [watchlist, setWatchlist] = useState({})
 
 
-  //POST
+  //crea un nuevo perfil
   const createProfile = async (profileData) => {
-    const { data, error } = await crearPerfil(profileData)
+    const { data } = await crearPerfil(profileData)
     console.log('error=>', data.message)
   }
 
-
+  //actualiza datos de un perfil
   const editProfile = async (id, profileData) => {
-    const { data, error } = await editarPerfil(id, profileData)
+    const { data } = await editarPerfil(id, profileData)
     console.log('error=>', data.message)
     getProfiles(data.user)
   }
 
+  //trae todos los perfiles de un usuario
   const getProfiles = async (userId) => {
-
-    const { data, error } = await obtenerPerfiles(userId)
+    const { data } = await obtenerPerfiles(userId)
     setProfiles(data)
-    console.log('error=>', data.error)
   }
 
+  //elimina un perfil
   const deleteProfile = async (id) => {
-
-    const { data, error } = await borrarPerfil(id)
+    const { data } = await borrarPerfil(id)
     setProfiles(profiles.filter(item => item._id !== id))
-    console.log('error=>', data.error)
   }
 
 
-  /// envia un mail con un token
-  const olvidoPassword = async (email) => {
-    console.log(email)
-    const { data, error } = await olvidoPass(email)
-    console.log('error en olvido=>', data.message)
-  }
-
-  ///envia la nueva contrraseña
-  const resetPassword = async (id, password) => {
-    const { data, error } = await resetPass(id, password)
-    console.log('error en reset=>', data.message)
-  }
-
-  const loginUser = async (credentials) => {
-    const { data } = await login(credentials)
-
-    try {
-      const decoded = jwtDecode(data.token)
-      setUser(decoded)
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(decoded))
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-
-
-  // PUT 
-  const updateCard = async (id, updatedData) => {
-    const { data } = await axios.put(`${url}/${id}`, updatedData)
-    setCards((prev) =>
-      prev.map((item) => (item.id == id ? data : item))
-    )
-  }
-
-  //DELETE
-  const deleteCard = async (id) => {
-    await axios.delete(`${url}/${id}`)
-    setCards((prev) => prev.filter((item) => item.id != id))
-  }
-
-
-
+  //agrega o quita una pelicula de la lista de favoritos
   const toggleWatchlist = async (nuevoItem, profileId) => {
-    // console.log('nuevoItem=>',nuevoItem)
-    // console.log('profileId=>',profileId)
-    await setWatchlist(prev => {
+
+    setWatchlist(prev => {
       const arrayActual = prev[profileId] || [];
 
       // Verificar si ya existe un objeto con el mismo id
@@ -107,40 +59,20 @@ export const ProfileProvider = ({ children }) => {
 
   }
 
-  // const indiceExistente = watchlist.lista.findIndex(item => item.id === nuevoItem.id && watchlist.idProfile===profileId );
-
-  // // Si el item existe (índice >= 0),lo elimina del array
-  // if (indiceExistente >= 0) {
-
-  //   const newWatchlist = {...watchlist, lista : lista.filter(item => item.id !== nuevoItem.id)}
-  //   console.log(newWatchlist)
-  //   setWatchlist(newWatchlist);
-  //   localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
-  // }
-  // else {
-  //     console.log('agregando a la watchlist')
-  //   // Si no existe, agrega el nuevo item al final del array
-  //   setWatchlist({...watchlist, lista:[ ...lista,nuevoItem]});
-  //   console.log(watchlist)
-  //   localStorage.setItem("watchlist", JSON.stringify([...watchlist, nuevoItem]));
-  // }
-
-
-  //devuelve un boolean que indica si el id de la pelicuala ya esta en favoritos
+  // verifica si una pelicula ya se encuentra en la lsita de favoritos
   const isInWatchlist = (id) => {
 
     try {
       if (watchlist[currentProfile?._id]) {
         return watchlist[currentProfile._id].some(item => item._id === id);
-
       }
       else {
         return false
       }
-
     } catch (error) {
     }
   }
+
   //carga la watchlist del localstorage
   useEffect(() => {
     const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []
@@ -148,45 +80,9 @@ export const ProfileProvider = ({ children }) => {
 
   }, [])
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   const savedUser = localStorage.getItem('user');
-  //   if (token && savedUser) {
-  //     try {
 
-  //       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  //     } catch (err) {
-  //       console.error('Error parsing saved user:', err);
-  //     }
-  //   }
-  // }, []);
-
-
-  // // Cambio de página
-  // const paginate = (pageNumber) => {
-  //     // Asegurarse de que el número de página esté dentro del rango válido
-  //     if (pageNumber >= 1 && pageNumber <= totalPages) {
-  //         setCurrentPage(pageNumber);
-  //         // Opcional: Desplazarse hacia arriba al cambiar de página
-  //         window.scrollTo(0, 0);
-  //     }
-  // };
-
-  // useEffect(() => {
-  //     // Calcular el número total de páginas
-  //     setTotalPages(Math.ceil(cards.length / cardsPerPage));
-  //     // calcular el total de cartas
-  //     setTotalCards(cards.length)
-
-  //     // Actualizar las cartas que se muestran actualmente
-  //     const indexOfLastCard = currentPage * cardsPerPage;
-  //     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  //     setCurrentCards(cards.slice(indexOfFirstCard, indexOfLastCard));
-  // }, [cards, cardsPerPage, currentPage]);
-
+  //carga el perfil desde localstorage
   useEffect(() => {
-
-
     try {
       const profile = localStorage.getItem('currentProfile');
       const parsed = JSON.parse(profile);
@@ -198,8 +94,9 @@ export const ProfileProvider = ({ children }) => {
 
   }, [])
 
+  //estable una varible en el header indicando si el perfil actual es menor de edad
   useEffect(() => {
-    if (currentProfile )  api.defaults.headers.common['X-Adult'] = (currentProfile.age > 18)
+    if (currentProfile) api.defaults.headers.common['X-Adult'] = (currentProfile.age > 18)
   }, [currentProfile])
 
   return (

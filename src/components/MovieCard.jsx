@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useState } from 'react'
 import { useProfile } from '../contexts/ProfileContext'
- import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
 const MovieCard = ({ index ,_id, title,  poster_path }) => {
@@ -9,18 +9,17 @@ const MovieCard = ({ index ,_id, title,  poster_path }) => {
     
      const navigate = useNavigate()
        
-        const { toggleWatchlist, isInWatchlist, currentProfile } = useProfile()
-        const [currentPage, setCurrentPage] = useState(1);
-           
+      const { toggleWatchlist, isInWatchlist, currentProfile } = useProfile()  
     
-        const handleClick = (id) => {
+      const handleClick = (id) => {
             navigate(`/movies/${id}`)
         }
     
+        //agrega o quita de la lista de favoritos
         const addToWatchlist = () => {
-           toast.info(isInWatchlist(_id) ? "se quitó de Mi Lista":"se agregó de Mi Lista...");
+           toast.info(isInWatchlist(_id) ? "se quitó de Mi Lista":"se agregó de Mi Lista...")
             toggleWatchlist({_id, title, poster_path}, currentProfile._id)
-                ; // Evita que el evento de clic se propague al contenedor padre
+              
     
         }
 

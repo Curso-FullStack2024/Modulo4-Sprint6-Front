@@ -1,33 +1,30 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Card, Checkbox, Datepicker, Label, Select, Textarea, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form"
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useAuth } from "../contexts/AuthContext";
-import { useMovies } from "../contexts/MovieContext";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Label, Card, TextInput, Datepicker, Textarea, Select, Checkbox } from "flowbite-react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import * as yup from 'yup';
+import { useMovies } from "../contexts/MovieContext";
 
 
 //validaciones
 const schema = yup.object().shape({
-   title: yup.string().required('el título es obligatorio'),
-   original_title: yup.string().required('el título original es obligatorio'),
-   id: yup.number('debe ingresar un numero').typeError('Debes ingresar un número válido').required('el codigo IMDd es obligatorio'),
-   release_date: yup.string().required('la fecha de estreno es obligatoria'),
-   overview: yup.string().required('el resumen es obligatorio'),
+  title: yup.string().required('el título es obligatorio'),
+  original_title: yup.string().required('el título original es obligatorio'),
+  id: yup.number('debe ingresar un numero').typeError('Debes ingresar un número válido').required('el codigo IMDd es obligatorio'),
+  release_date: yup.string().required('la fecha de estreno es obligatoria'),
+  overview: yup.string().required('el resumen es obligatorio'),
   original_language: yup.string().required('el idioma es obligatorio'),
   poster_path: yup.string().required('la imagen de portada es obligatoria'),
   backdrop_path: yup.string().required('la imagen de reverso es obligatoria'),
   genre_ids: yup.array().min(1, "Debes seleccionar al menos un genero").required("el género es obligatorio"),
 })
- 
+
 const AddMovie = () => {
   const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm({ resolver: yupResolver(schema) })
-  const navigate = useNavigate()
-  
-  const { getGenres, getLanguages , createMovie} = useMovies()
+
+  const { getGenres, getLanguages, createMovie } = useMovies()
 
   const [generos, setGeneros] = useState([])
   const [languages, setLanguages] = useState([])
@@ -41,24 +38,20 @@ const AddMovie = () => {
       await toast.promise(
         createMovie(data),
         {
-          pending: 'Creando pelicula...',
-          success: 'Pelicula creada con éxito! 🎉',
-          error: 'Error al crear la pelicula. Intenta nuevamente.',
+          pending: 'Creando película...',
+          success: 'Película creada con éxito! 🎉',
+          error: 'Error al crear la película. Intenta nuevamente.',
         }
       );
       Swal.fire({
         icon: 'success',
         title: 'Éxito',
-        text: 'Pelicula creada con éxito!',              
+        text: 'Película creada con éxito!',
         confirmButtonText: 'Aceptar'
       })
-        reset()
-      //  navigate(`/login`)
-      //  navigate(`/validar/${data.token}`)
-      //  navigate(`/`)
-
+      reset()
+     
     } catch (error) {
-      console.log('error en crearPelicula=>', error)
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -81,7 +74,7 @@ const AddMovie = () => {
 
   return (
     <div className="flex flex-content justify-center items-center dark:bg-gray-700 dark:text-gray-100">
-      <Card className="flex   w-full max-w-xl rounded-lg shadow dark:bg-gray-800">
+      <Card className="flex   w-full max-w-xl rounded-lg shadow dark:bg-gray-800 ">
         <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-6">
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">Nueva película </h3>
@@ -116,8 +109,7 @@ const AddMovie = () => {
               </div>
               <p className='text-red-500'>{errors.release_date?.message}</p>
               <Datepicker
-                onChange={(date) => {
-                  console.log(date.toLocaleDateString())
+                onChange={(date) => {               
                   setSelectedDate(date);
                   setValue('release_date', date);
                 }}
@@ -189,7 +181,7 @@ const AddMovie = () => {
               </Select>
             </div>
 
-                
+
 
             <div className="w-full">
               <Button type="submit">Guardar</Button>
