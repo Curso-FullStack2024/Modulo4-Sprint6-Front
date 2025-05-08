@@ -98,11 +98,11 @@ const UsersTable = () => {
                 <TableRow key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
 
                   <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{user.email}</TableCell>
-                  <TableCell> {user.role.name.toString()}</TableCell>
+                  <TableCell> {user.role?.name.toString()}</TableCell>
                   <TableCell className='text-center'>{user.isVerified && <i className="bi bi-check2-square" />}</TableCell>
                   <TableCell>
                     <ButtonGroup>
-                      <Button color="alternative" size="xs" className='cursor-pointer' title='editar' onClick={() => openEdit(user._id, user.email, user.role.name, user.isVerified)}>
+                      <Button color="alternative" size="xs" className='cursor-pointer' title='editar' onClick={() => openEdit(user._id, user.email, user.role?.name, user.isVerified)}>
                         <i className="bi bi-pen text-sm  p-0" />
                       </Button>
                       <Button color="alternative" size="xs" className='cursor-pointer' title='borrar' onClick={() => handleDelete(user._id)}>

@@ -53,7 +53,7 @@ const Validar = () => {
 
     <div className="flex flex-content items-center justify-center min-h-[calc(100vh-5rem-7.5rem)]">
       <Card className="  w-full max-w-md  rounded-lg shadow dark:bg-gray-800">
-         <Button onClick={validarUsuario(token)}>Validar</Button>
+         <Button onClick={()=>validarUsuario(token)}>Validar</Button>
       </ Card>
     </div>
   );

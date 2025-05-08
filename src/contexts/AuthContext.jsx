@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   // login - acceso al sistema
   const loginUser = async (credentials) => {
 
-    try {
+    // try {
       const { data } = await login(credentials)
       // si las credenciales son validas almacena los datos n local storage y estabelece el token en el header 
       const decoded = jwtDecode(data.token)
@@ -69,9 +69,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(decoded))
       api.defaults.headers.common["authorization"] = `Bearer ${data.token}`
-    } catch (error) {
-      console.log(error)
-    }
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
 
   //cierra la sesion del usuario
